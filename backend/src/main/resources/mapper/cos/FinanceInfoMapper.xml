@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.FinanceInfoMapper">
+
+    <!-- 分页获取财务申请 -->
+    <select id="queryFinancePage" resultType="java.util.LinkedHashMap">
+        select
+        ci.id,
+        ci.staff_id,
+        ci.code,
+        ci.audit_title,
+        ci.content,
+        ci.status,
+        ci.create_date,
+        ci.images,
+        ci.audit_id,
+        ci.audit_date,
+        ci.total_price,
+        si.code as staffCode,
+        si.name as staffName,
+        si.images as staffImages,
+        ei.name as enterpriseName,
+        ei.images as enterpriseImages,
+        di.dept_name,
+        poi.name as positionName
+        from
+        finance_info ci
+        left join staff_info si on (si.id = ci.staff_id)
+        left join enterprise_info ei on (ei.id = si.enterprise_id)
+        left join dept_info di on (di.id = si.dept_id)
+        left join position_info poi on (poi.id = si.position_id)
+        where 1 = 1
+        <if test="financeInfo.status != null">
+            AND ci.status = #{financeInfo.status}
+        </if>
+        <if test="financeInfo.staffName != null and financeInfo.staffName != ''">
+            AND si.name LIKE CONCAT('%',#{financeInfo.staffName},'%')
+        </if>
+        <if test="financeInfo.staffId != null and financeInfo.staffId != ''">
+            AND si.user_id = #{financeInfo.staffId}
+        </if>
+        <if test="financeInfo.enterpriseId != null and financeInfo.enterpriseId != ''">
+            AND ei.user_id = #{financeInfo.enterpriseId}
+        </if>
+        order by ci.create_date desc
+    </select>
+</mapper>

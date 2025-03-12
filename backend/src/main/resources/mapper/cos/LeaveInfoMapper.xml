@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.LeaveInfoMapper">
+
+    <!-- 分页获取请假信息 -->
+    <select id="selectLeavePage" resultType="java.util.LinkedHashMap">
+        select
+        ci.id,
+        ci.staff_id,
+        ci.audit_title,
+        ci.days,
+        ci.status,
+        ci.create_date,
+        ci.images,
+        ci.audit_id,
+        ci.audit_date,
+        si.code as staffCode,
+        si.name as staffName,
+        si.images as staffImages,
+        ei.name as enterpriseName,
+        ei.images as enterpriseImages,
+        di.dept_name,
+        poi.name as positionName
+        from
+        leave_info ci
+        left join staff_info si on (si.id = ci.staff_id)
+        left join enterprise_info ei on (ei.id = si.enterprise_id)
+        left join dept_info di on (di.id = si.dept_id)
+        left join position_info poi on (poi.id = si.position_id)
+        where 1 = 1
+        <if test="leaveInfo.auditTitle != null and leaveInfo.auditTitle != ''">
+            AND ci.audit_title LIKE CONCAT('%',#{leaveInfo.auditTitle},'%')
+        </if>
+        <if test="leaveInfo.status != null">
+            AND ci.status = #{leaveInfo.status}
+        </if>
+        <if test="leaveInfo.staffName != null and leaveInfo.staffName != ''">
+            AND si.name LIKE CONCAT('%',#{leaveInfo.staffName},'%')
+        </if>
+        <if test="leaveInfo.staffId != null and leaveInfo.staffId != ''">
+            AND si.user_id = #{leaveInfo.staffId}
+        </if>
+        <if test="leaveInfo.enterpriseId != null and leaveInfo.enterpriseId != ''">
+            AND ei.user_id = #{leaveInfo.enterpriseId}
+        </if>
+        order by ci.create_date desc
+    </select>
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.NotifyInfoMapper">
+
+    <!-- 分页获取消息通知信息 -->
+    <select id="queryNotifyPage" resultType="java.util.LinkedHashMap">
+        select
+        ni.id,
+        ni.user_id,
+        ni.user_code,
+        ni.content,
+        ni.del_flag,
+        ni.create_date,
+        ni.name,
+        si.code as staffCode,
+        si.name as staffName,
+        si.images as staffImages,
+        ei.name as enterpriseName,
+        ei.images as enterpriseImages,
+        di.dept_name,
+        poi.name as positionName
+        from
+        notify_info ni
+        left join staff_info si on (si.id = ni.staff_id)
+        left join enterprise_info ei on (ei.id = si.enterprise_id)
+        left join dept_info di on (di.id = si.dept_id)
+        left join position_info poi on (poi.id = si.position_id)
+        where
+        1 = 1
+        <if test="notifyInfo.userName != null and notifyInfo.userName != ''">
+            AND ui.name LIKE CONCAT('%',#{notifyInfo.userName},'%')
+        </if>
+        <if test="notifyInfo.content != null and notifyInfo.content != ''">
+            AND ni.content LIKE CONCAT('%',#{notifyInfo.content},'%')
+        </if>
+        <if test="notifyInfo.staffName != null and notifyInfo.staffName != ''">
+            AND si.name LIKE CONCAT('%',#{notifyInfo.staffName},'%')
+        </if>
+        <if test="notifyInfo.staffId != null and notifyInfo.staffId != ''">
+            AND si.user_id = #{notifyInfo.staffId}
+        </if>
+        <if test="notifyInfo.enterpriseId != null and notifyInfo.enterpriseId != ''">
+            AND ei.user_id = #{notifyInfo.enterpriseId}
+        </if>
+        order by
+        ni.create_date desc
+    </select>
+
+    <!-- 根据用户ID获取消息通知信息 -->
+    <select id="queryNotifyByUser" resultType="java.util.LinkedHashMap">
+        select ni.id,
+               ni.user_id,
+               ni.user_code,
+               ni.content,
+               ni.del_flag,
+               ni.create_date,
+               ni.name,
+               si.code   as staffCode,
+               si.name   as staffName,
+               si.images as staffImages
+        from notify_info ni
+                 left join staff_info si on (si.id = ni.staff_id)
+        where 1 = 1
+          AND si.user_id = #{userId}
+        AND ni.del_flag = '0'
+        order by ni.create_date desc
+    </select>
+</mapper>

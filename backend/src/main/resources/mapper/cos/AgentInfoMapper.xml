@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cc.mrbird.febs.cos.dao.AgentInfoMapper">
+
+    <!-- 分页获取代办任务 -->
+    <select id="queryAgentPage" resultType="java.util.LinkedHashMap">
+        select
+        ai.id,
+        ai.staff_id,
+        ai.task_title,
+        ai.content,
+        ai.status,
+        ai.type,
+        ai.create_date,
+        ai.complate_date,
+        si.code as staffCode,
+        si.name as staffName,
+        si.images as staffImages,
+        ei.name as enterpriseName,
+        ei.images as enterpriseImages,
+        di.dept_name,
+        poi.name as positionName
+        from
+        agent_info ai
+        left join staff_info si on (si.id = ai.staff_id)
+        left join enterprise_info ei on (ei.id = si.enterprise_id)
+        left join dept_info di on (di.id = si.dept_id)
+        left join position_info poi on (poi.id = si.position_id)
+        where 1 = 1
+        <if test="agentInfo.taskTitle != null and agentInfo.taskTitle != ''">
+            AND ai.task_title LIKE CONCAT('%',#{agentInfo.taskTitle},'%')
+        </if>
+        <if test="agentInfo.staffName != null and agentInfo.staffName != ''">
+            AND si.name LIKE CONCAT('%',#{agentInfo.staffName},'%')
+        </if>
+        <if test="agentInfo.staffId != null and agentInfo.staffId != ''">
+            AND si.user_id = #{agentInfo.staffId}
+        </if>
+        <if test="agentInfo.enterpriseId != null and agentInfo.enterpriseId != ''">
+            AND ei.user_id = #{agentInfo.enterpriseId}
+        </if>
+        order by ai.create_date desc
+    </select>
+
+    <!-- 本月订单信息 -->
+    <select id="selectOrderInfoByMonth" resultType="cc.mrbird.febs.cos.entity.AgentInfo">
+        select
+        oi.*
+        from
+        agent_info oi
+        where
+        1 = 1
+        and DATE_FORMAT( oi.create_date, '%Y-%m' ) = DATE_FORMAT( CURDATE(), '%Y-%m' )
+        <if test="enterpriseId != null and enterpriseId != ''">
+            AND oi.enterprise_id = #{enterpriseId}
+        </if>
+
+    </select>
+
+    <!-- 本年订单信息 -->
+    <select id="selectOrderInfoByYear" resultType="cc.mrbird.febs.cos.entity.AgentInfo">
+        select oi.*
+        from agent_info oi
+        where 1 = 1
+          and DATE_FORMAT(oi.create_date, '%Y') = DATE_FORMAT(CURDATE(), '%Y')
+        <if test="enterpriseId != null and enterpriseId != ''">
+            AND oi.enterprise_id = #{enterpriseId}
+        </if>
+    </select>
+
+    <!-- 近十天内订单数量统计 -->
+    <select id="selectOrderNumDays" resultType="java.util.LinkedHashMap">
+        SELECT DATE_FORMAT(spo.days, '%m-%d') AS days,
+               IFNULL(COUNT(oi.id), 0) AS count
+        FROM
+            (
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 0 DAY ) days UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 1 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 2 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 3 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 4 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 5 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 6 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 7 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 8 DAY ) UNION
+            SELECT
+            DATE_SUB( curdate(), INTERVAL + 9 DAY )) spo
+            LEFT JOIN agent_info oi
+        ON (
+            DATE_FORMAT( oi.create_date, '%Y-%m-%d' ) = DATE_FORMAT( spo.days, '%Y-%m-%d' )
+        <if test="enterpriseId != null and enterpriseId != ''">
+            AND oi.enterprise_id = #{enterpriseId}
+        </if>
+            )
+        WHERE 1 = 1
+        GROUP BY
+            days
+        ORDER BY
+            days ASC
+    </select>
+
+    <!-- 近十天内订单收益统计 -->
+    <select id="selectOrderAmountDays" resultType="java.util.LinkedHashMap">
+        SELECT DATE_FORMAT(spo.days, '%m-%d') AS days,
+        IFNULL(COUNT(oi.id), 0) AS count
+        FROM
+        (
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 0 DAY ) days UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 1 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 2 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 3 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 4 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 5 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 6 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 7 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 8 DAY ) UNION
+        SELECT
+        DATE_SUB( curdate(), INTERVAL + 9 DAY )) spo
+        LEFT JOIN agent_info oi
+        ON (
+        DATE_FORMAT( oi.create_date, '%Y-%m-%d' ) = DATE_FORMAT( spo.days, '%Y-%m-%d' ) AND oi.status != 0
+        <if test="enterpriseId != null and enterpriseId != ''">
+            AND oi.enterprise_id = #{enterpriseId}
+        </if>
+        )
+        WHERE 1 = 1
+        GROUP BY
+        days
+        ORDER BY
+        days ASC
+    </select>
+</mapper>
