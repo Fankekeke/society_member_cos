@@ -144,10 +144,6 @@ export default {
         ellipsis: true,
         dataIndex: 'positionName'
       }, {
-        title: '所属校企',
-        ellipsis: true,
-        dataIndex: 'enterpriseName'
-      }, {
         title: '上班打卡时间',
         dataIndex: 'putTakeDate',
         customRender: (text, row, index) => {

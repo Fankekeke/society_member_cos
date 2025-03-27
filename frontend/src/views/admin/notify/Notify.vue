@@ -131,10 +131,6 @@ export default {
         dataIndex: 'content',
         ellipsis: true
       }, {
-        title: '所属校企',
-        ellipsis: true,
-        dataIndex: 'enterpriseName'
-      }, {
         title: '消息状态',
         dataIndex: 'delFlag',
         customRender: (text, row, index) => {

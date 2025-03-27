@@ -7,22 +7,18 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="员工姓名"
+                label="规则编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.teacherName"/>
+                <a-input v-model="queryParams.code"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="审批状态"
+                label="规则内容"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-select v-model="queryParams.status">
-                  <a-select-option value="0">未审批</a-select-option>
-                  <a-select-option value="1">通过</a-select-option>
-                  <a-select-option value="2">驳回</a-select-option>
-                </a-select>
+                <a-input v-model="queryParams.remark"/>
               </a-form-item>
             </a-col>
           </div>
@@ -35,7 +31,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">添加财务申请</a-button>
+        <a-button type="primary" ghost @click="add">新增</a-button>
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -48,61 +44,67 @@
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                :scroll="{ x: 900 }"
                @change="handleTableChange">
+        <template slot="titleShow" slot-scope="text, record">
+          <template>
+            <a-badge status="processing" v-if="record.rackUp === 1"/>
+            <a-badge status="error" v-if="record.rackUp === 0"/>
+            <a-tooltip>
+              <template slot="title">
+                {{ record.title }}
+              </template>
+              {{ record.title.slice(0, 8) }} ...
+            </a-tooltip>
+          </template>
+        </template>
         <template slot="contentShow" slot-scope="text, record">
           <template>
             <a-tooltip>
               <template slot="title">
-                {{ record.auditTitle }}
+                {{ record.content }}
               </template>
-              {{ record.auditTitle.slice(0, 20) }} ...
+              {{ record.content.slice(0, 30) }} ...
             </a-tooltip>
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="file-search" @click="memberViewOpen(record)" title="详 情" style="margin-left: 15px"></a-icon>
+          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
         </template>
       </a-table>
     </div>
-    <member-view
-      @close="handlememberViewClose"
-      :memberShow="memberView.visiable"
-      :memberData="memberView.data">
-    </member-view>
-    <classes-add
-      v-if="classesAdd.visiable"
-      @close="handleclassesAddClose"
-      @success="handleclassesAddSuccess"
-      :classesAddVisiable="classesAdd.visiable">
-    </classes-add>
+    <rules-add
+      v-if="rulesAdd.visiable"
+      @close="handlerulesAddClose"
+      @success="handlerulesAddSuccess"
+      :rulesAddVisiable="rulesAdd.visiable">
+    </rules-add>
+    <rules-edit
+      ref="rulesEdit"
+      @close="handlerulesEditClose"
+      @success="handlerulesEditSuccess"
+      :rulesEditVisiable="rulesEdit.visiable">
+    </rules-edit>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import memberView from './FinanceView.vue'
-import classesAdd from './FinanceAdd.vue'
+import rulesAdd from './RulesAdd'
+import rulesEdit from './RulesEdit'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
-  name: 'member',
-  components: {memberView, RangeDate, classesAdd},
+  name: 'rules',
+  components: {rulesAdd, rulesEdit, RangeDate},
   data () {
     return {
       advanced: false,
-      memberAdd: {
+      rulesAdd: {
         visiable: false
       },
-      classesAdd: {
+      rulesEdit: {
         visiable: false
-      },
-      memberEdit: {
-        visiable: false
-      },
-      memberView: {
-        visiable: false,
-        data: null
       },
       queryParams: {},
       filteredInfo: null,
@@ -128,69 +130,46 @@ export default {
     }),
     columns () {
       return [{
-        title: '用户名称',
-        ellipsis: true,
-        dataIndex: 'staffName'
-      }, {
-        title: '员工头像',
-        dataIndex: 'staffImages',
-        customRender: (text, record, index) => {
-          if (!record.staffImages) return <a-avatar shape="square" icon="user" />
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.staffImages.split(',')[0] } />
-            </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.staffImages.split(',')[0] } />
-          </a-popover>
-        }
-      }, {
-        title: '所属部门',
-        ellipsis: true,
-        dataIndex: 'deptName'
-      }, {
-        title: '职位',
-        ellipsis: true,
-        dataIndex: 'positionName'
-      }, {
-        title: '财务内容',
-        dataIndex: 'auditTitle',
+        title: '规则编号',
+        dataIndex: 'code',
         ellipsis: true
       }, {
-        title: '审批状态',
-        dataIndex: 'status',
-        customRender: (text, row, index) => {
-          switch (text) {
-            case '0':
-              return <a-tag>未审批</a-tag>
-            case '1':
-              return <a-tag>通过</a-tag>
-            case '2':
-              return <a-tag>驳回</a-tag>
-            default:
-              return '- -'
-          }
-        }
+        title: '规则内容',
+        dataIndex: 'remark',
+        ellipsis: true
       }, {
-        title: '申请金额',
-        dataIndex: 'totalPrice',
+        title: '最小值',
+        dataIndex: 'minValue',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
+      }, {
+        title: '最大值',
+        dataIndex: 'maxValue',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
       }, {
         title: '创建时间',
         dataIndex: 'createDate',
-        ellipsis: true,
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
       }, {
         title: '操作',
         dataIndex: 'operation',
@@ -202,48 +181,33 @@ export default {
     this.fetch()
   },
   methods: {
-    add () {
-      this.classesAdd.visiable = true
-    },
-    handleclassesAddClose () {
-      this.classesAdd.visiable = false
-    },
-    handleclassesAddSuccess () {
-      this.classesAdd.visiable = false
-      this.$message.success('新增财务成功')
-      this.search()
-    },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
     toggleAdvanced () {
       this.advanced = !this.advanced
     },
-    handlememberAddClose () {
-      this.memberAdd.visiable = false
+    add () {
+      this.rulesAdd.visiable = true
     },
-    handlememberAddSuccess () {
-      this.memberAdd.visiable = false
-      this.$message.success('新增财务成功')
+    handlerulesAddClose () {
+      this.rulesAdd.visiable = false
+    },
+    handlerulesAddSuccess () {
+      this.rulesAdd.visiable = false
+      this.$message.success('新增价格规则成功')
       this.search()
     },
     edit (record) {
-      this.$refs.memberEdit.setFormValues(record)
-      this.memberEdit.visiable = true
+      this.$refs.rulesEdit.setFormValues(record)
+      this.rulesEdit.visiable = true
     },
-    memberViewOpen (row) {
-      this.memberView.data = row
-      this.memberView.visiable = true
+    handlerulesEditClose () {
+      this.rulesEdit.visiable = false
     },
-    handlememberViewClose () {
-      this.memberView.visiable = false
-    },
-    handlememberEditClose () {
-      this.memberEdit.visiable = false
-    },
-    handlememberEditSuccess () {
-      this.memberEdit.visiable = false
-      this.$message.success('修改财务成功')
+    handlerulesEditSuccess () {
+      this.rulesEdit.visiable = false
+      this.$message.success('修改价格规则成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -261,7 +225,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/finance-info/' + ids).then(() => {
+          that.$delete('/cos/price-rules/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -331,11 +295,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      if (params.status === undefined) {
-        delete params.status
-      }
-      params.staffId = this.currentUser.userId
-      this.$get('/cos/finance-info/page', {
+      this.$get('/cos/price-rules/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

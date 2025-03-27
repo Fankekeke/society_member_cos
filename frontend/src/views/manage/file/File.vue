@@ -142,17 +142,6 @@ export default {
           return <a-tag>{{ text }}</a-tag>
         }
       }, {
-        title: '所属校企',
-        dataIndex: 'enterpriseName',
-        ellipsis: true,
-        customRender: (text, row, index) => {
-          if (text !== null) {
-            return text
-          } else {
-            return '- -'
-          }
-        }
-      }, {
         title: '文件关键字',
         dataIndex: 'fileKey',
         ellipsis: true,

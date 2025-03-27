@@ -166,10 +166,6 @@ export default {
           }
         }
       }, {
-        title: '所属校企',
-        ellipsis: true,
-        dataIndex: 'enterpriseName'
-      }, {
         title: '待办标题',
         ellipsis: true,
         dataIndex: 'taskTitle'

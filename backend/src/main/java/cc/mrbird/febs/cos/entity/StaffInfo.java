@@ -1,5 +1,6 @@
 package cc.mrbird.febs.cos.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.io.Serializable;
@@ -118,7 +119,7 @@ public class StaffInfo implements Serializable {
     private Integer positionId;
     private Integer memberLevel;
 
-    private Integer integral;
+    private BigDecimal integral;
 
 
 }

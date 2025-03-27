@@ -143,10 +143,6 @@ export default {
           </a-popover>
         }
       }, {
-        title: '所属校企',
-        ellipsis: true,
-        dataIndex: 'enterpriseName'
-      }, {
         title: '主办方',
         ellipsis: true,
         dataIndex: 'organizer'

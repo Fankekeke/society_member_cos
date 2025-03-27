@@ -4,9 +4,11 @@ import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.cos.entity.ExchangeInfo;
 import cc.mrbird.febs.cos.dao.ExchangeInfoMapper;
 import cc.mrbird.febs.cos.entity.MaterialInfo;
+import cc.mrbird.febs.cos.entity.StaffInfo;
 import cc.mrbird.febs.cos.entity.UserInfo;
 import cc.mrbird.febs.cos.service.IExchangeInfoService;
 import cc.mrbird.febs.cos.service.IMaterialInfoService;
+import cc.mrbird.febs.cos.service.IStaffInfoService;
 import cc.mrbird.febs.cos.service.IUserInfoService;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -29,7 +31,7 @@ import java.util.LinkedHashMap;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class ExchangeInfoServiceImpl extends ServiceImpl<ExchangeInfoMapper, ExchangeInfo> implements IExchangeInfoService {
 
-    private final IUserInfoService userInfoService;
+    private final IStaffInfoService staffInfoService;
 
     private final IMaterialInfoService materialInfoService;
 
@@ -55,7 +57,7 @@ public class ExchangeInfoServiceImpl extends ServiceImpl<ExchangeInfoMapper, Exc
     @Transactional(rollbackFor = Exception.class)
     public boolean addExchange(ExchangeInfo exchangeInfo) throws FebsException {
         // 获取所属用户
-        UserInfo userInfo = userInfoService.getOne(Wrappers.<UserInfo>lambdaQuery().eq(UserInfo::getUserId, exchangeInfo.getUserId()));
+        StaffInfo userInfo = staffInfoService.getOne(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getUserId, exchangeInfo.getUserId()));
         // 物品信息
         MaterialInfo materialInfo = materialInfoService.getById(exchangeInfo.getMaterialId());
 
@@ -75,7 +77,7 @@ public class ExchangeInfoServiceImpl extends ServiceImpl<ExchangeInfoMapper, Exc
 
         // 更新用户积分
         userInfo.setIntegral(NumberUtil.sub(userInfo.getIntegral(), materialInfo.getIntegral()));
-        return userInfoService.updateById(userInfo);
+        return staffInfoService.updateById(userInfo);
     }
 
     /**
@@ -99,7 +101,7 @@ public class ExchangeInfoServiceImpl extends ServiceImpl<ExchangeInfoMapper, Exc
         result.put("exchange", exchangeInfo);
 
         // 用户信息
-        UserInfo userInfo = userInfoService.getById(exchangeInfo.getUserId());
+        StaffInfo userInfo = staffInfoService.getById(exchangeInfo.getUserId());
         result.put("user", userInfo);
 
         // 物品信息

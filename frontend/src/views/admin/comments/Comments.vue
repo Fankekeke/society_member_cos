@@ -134,10 +134,6 @@ export default {
         ellipsis: true,
         dataIndex: 'positionName'
       }, {
-        title: '所属校企',
-        ellipsis: true,
-        dataIndex: 'enterpriseName'
-      }, {
         title: '状态',
         dataIndex: 'status',
         customRender: (text, row, index) => {

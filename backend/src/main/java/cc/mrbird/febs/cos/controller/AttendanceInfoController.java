@@ -8,12 +8,14 @@ import cc.mrbird.febs.cos.service.IAttendanceInfoService;
 import cc.mrbird.febs.cos.service.INotifyInfoService;
 import cc.mrbird.febs.cos.service.IStaffInfoService;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -101,7 +103,7 @@ public class AttendanceInfoController {
         if (staffInfo != null) {
             attendanceInfo.setStaffId(staffInfo.getId());
             // 每次打卡增加10积分
-            staffInfo.setIntegral(staffInfo.getIntegral() == null ? 0 : staffInfo.getIntegral() + 10);
+            staffInfo.setIntegral(staffInfo.getIntegral() == null ? new BigDecimal(10) : NumberUtil.add(10, staffInfo.getIntegral()));
             staffInfoService.updateById(staffInfo);
         }
         attendanceInfo.setPutTakeDate(DateUtil.formatDateTime(new Date()));

@@ -153,10 +153,6 @@ export default {
         ellipsis: true,
         dataIndex: 'positionName'
       }, {
-        title: '所属校企',
-        ellipsis: true,
-        dataIndex: 'enterpriseName'
-      }, {
         title: '请假内容',
         dataIndex: 'auditTitle',
         ellipsis: true
