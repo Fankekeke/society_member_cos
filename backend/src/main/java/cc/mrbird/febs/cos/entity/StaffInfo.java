@@ -116,6 +116,9 @@ public class StaffInfo implements Serializable {
      * 岗位管理
      */
     private Integer positionId;
+    private Integer memberLevel;
+
+    private Integer integral;
 
 
 }

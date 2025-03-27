@@ -22,6 +22,8 @@
         si.del_flag,
         si.dept_id,
         si.position_id,
+        si.member_level,
+        si.integral,
         di.dept_name,
         poi.name as positionName,
         ei.name as enterpriseName

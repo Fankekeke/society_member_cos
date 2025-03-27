@@ -100,6 +100,9 @@ public class AttendanceInfoController {
         StaffInfo staffInfo = staffInfoService.getOne(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getUserId, attendanceInfo.getStaffId()));
         if (staffInfo != null) {
             attendanceInfo.setStaffId(staffInfo.getId());
+            // 每次打卡增加10积分
+            staffInfo.setIntegral(staffInfo.getIntegral() == null ? 0 : staffInfo.getIntegral() + 10);
+            staffInfoService.updateById(staffInfo);
         }
         attendanceInfo.setPutTakeDate(DateUtil.formatDateTime(new Date()));
         return R.ok(attendanceInfoService.checkWork(attendanceInfo));
