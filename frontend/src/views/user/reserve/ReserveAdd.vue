@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="新增会员缴费" @cancel="onClose" :width="550">
+  <a-modal v-model="show" title="新增预约" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose">
         取消
@@ -10,32 +10,43 @@
     </template>
     <a-form :form="form" layout="vertical">
       <a-row :gutter="20">
-        <a-col :span="24">
-          <a-form-item label='费用金额' v-bind="formItemLayout">
-            <a-input-number :min="1" :max="99999" v-decorator="[
-              'totalPrice',
-              { rules: [{ required: true, message: '请输入费用金额!' }] }
-              ]" style="width: 100%"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="24">
-          <a-form-item label='申请标题' v-bind="formItemLayout">
+        <a-col :span="12">
+          <a-form-item label='预约标题' v-bind="formItemLayout">
             <a-input v-decorator="[
-            'auditTitle',
-            { rules: [{ required: true, message: '请输入申请标题!' }] }
+            'title',
+            { rules: [{ required: true, message: '请输入名称!' }] }
             ]"/>
           </a-form-item>
         </a-col>
+        <a-col :span="12">
+          <a-form-item label='上传人' v-bind="formItemLayout">
+            <a-input v-decorator="[
+            'publisher',
+            { rules: [{ required: true, message: '请输入上传人!' }] }
+            ]"/>
+          </a-form-item>
+        </a-col>
+        <a-col :span="12">
+          <a-form-item label='预约状态' v-bind="formItemLayout">
+            <a-select v-decorator="[
+              'rackUp',
+              { rules: [{ required: true, message: '请输入预约状态!' }] }
+              ]">
+              <a-select-option value="0">下架</a-select-option>
+              <a-select-option value="1">已发布</a-select-option>
+            </a-select>
+          </a-form-item>
+        </a-col>
         <a-col :span="24">
-          <a-form-item label='缴费详情' v-bind="formItemLayout">
+          <a-form-item label='预约内容' v-bind="formItemLayout">
             <a-textarea :rows="6" v-decorator="[
             'content',
-             { rules: [{ required: true, message: '请输入缴费详情!' }] }
+             { rules: [{ required: true, message: '请输入名称!' }] }
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='图片' v-bind="formItemLayout">
+          <a-form-item label='图册' v-bind="formItemLayout">
             <a-upload
               name="avatar"
               action="http://127.0.0.1:9527/file/fileUpload/"
@@ -63,8 +74,6 @@
 
 <script>
 import {mapState} from 'vuex'
-import moment from 'moment'
-moment.locale('zh-cn')
 function getBase64 (file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -78,9 +87,9 @@ const formItemLayout = {
   wrapperCol: { span: 24 }
 }
 export default {
-  name: 'classesAdd',
+  name: 'reserveAdd',
   props: {
-    classesAddVisiable: {
+    reserveAddVisiable: {
       default: false
     }
   },
@@ -90,7 +99,7 @@ export default {
     }),
     show: {
       get: function () {
-        return this.classesAddVisiable
+        return this.reserveAddVisiable
       },
       set: function () {
       }
@@ -102,19 +111,11 @@ export default {
       form: this.$form.createForm(this),
       loading: false,
       fileList: [],
-      teacherList: [],
       previewVisible: false,
       previewImage: ''
     }
   },
-  mounted () {
-  },
   methods: {
-    selectTeacherList () {
-      this.$get('/cos/teacher-info/list/check').then((r) => {
-        this.teacherList = r.data.data
-      })
-    },
     handleCancel () {
       this.previewVisible = false
     },
@@ -144,10 +145,9 @@ export default {
       })
       this.form.validateFields((err, values) => {
         values.images = images.length > 0 ? images.join(',') : null
-        values.staffId = this.currentUser.userId
         if (!err) {
           this.loading = true
-          this.$post('/cos/finance-info', {
+          this.$post('/cos/exercise-audit-info', {
             ...values
           }).then((r) => {
             this.reset()

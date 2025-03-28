@@ -1,48 +1,62 @@
 <template>
-  <a-modal v-model="show" title="会员缴费详情" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="兑换详情" @cancel="onClose" :width="1000">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
       </a-button>
     </template>
-    <div style="font-size: 13px;font-family: SimHei" v-if="memberData !== null">
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">基础信息</span></a-col>
-        <a-col :span="8"><b>会员编号：</b>
-          {{ memberData.staffCode ? memberData.staffCode : '- -' }}
+    <div style="font-size: 13px;font-family: SimHei">
+      <a-row style="padding-left: 24px;padding-right: 24px;" v-if="exchangeData !== null">
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">兑换信息</span></a-col>
+        <a-col :span="8"><b>兑换时间：</b>
+          {{ exchangeData.createDate }}
         </a-col>
-        <a-col :span="8"><b>会员姓名：</b>
-          {{ memberData.staffName ? memberData.staffName : '- -' }}
-        </a-col>
-        <a-col :span="8"><b>所属部门：</b>
-          {{ memberData.deptName }}
+        <a-col :span="8"><b>消耗积分：</b>
+          {{ exchangeData.integral ? exchangeData.integral : '- -' }}
         </a-col>
       </a-row>
       <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="8"><b>创建时间：</b>
-          {{ memberData.createDate }}
-        </a-col>
-        <a-col :span="8"><b>费用金额：</b>
-          {{ memberData.totalPrice }} 元
-        </a-col>
-        <a-col :span="8"><b>支付状态：</b>
-          <span v-if="memberData.status == 0">未支付</span>
-          <span v-if="memberData.status == 1">已支付</span>
-        </a-col>
-      </a-row>
+      <div v-if="userInfo != null">
+        <a-row style="padding-left: 24px;padding-right: 24px;">
+          <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">用户信息</span></a-col>
+          <a-col :span="8"><b>用户编号：</b>
+            {{ userInfo.code }}
+          </a-col>
+          <a-col :span="8"><b>用户名称：</b>
+            {{ userInfo.name ? userInfo.name : '- -' }}
+          </a-col>
+          <a-col :span="8"><b>联系方式：</b>
+            {{ userInfo.phone ? userInfo.phone : '- -' }}
+          </a-col>
+        </a-row>
+        <br/>
+        <a-row style="padding-left: 24px;padding-right: 24px;">
+          <a-col :span="8"><b>收货地址：</b>
+            {{ userInfo.address }}
+          </a-col>
+        </a-row>
+      </div>
       <br/>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">缴费详情</span></a-col>
-        <a-col :span="24">
-          {{ memberData.auditTitle ? memberData.auditTitle : '- -' }}
+      <a-row style="padding-left: 24px;padding-right: 24px;" v-if="materialInfo != null">
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">商品信息</span></a-col>
+        <a-col :span="8"><b>商品名称：</b>
+          {{ materialInfo.name }}
+        </a-col>
+        <a-col :span="8"><b>商品编号：</b>
+          {{ materialInfo.code ? materialInfo.code : '- -' }}
+        </a-col>
+        <a-col :span="8"><b>销量：</b>
+          {{ materialInfo.saleNum ? materialInfo.saleNum : '- -' }}
         </a-col>
         <br/>
+        <br/>
+        <a-col :span="24"><b></b>
+          {{ materialInfo.content ? materialInfo.content : '- -' }}
+        </a-col>
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">图片</span></a-col>
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">图册</span></a-col>
         <a-col :span="24">
           <a-upload
             name="avatar"
@@ -75,20 +89,20 @@ function getBase64 (file) {
   })
 }
 export default {
-  name: 'memberView',
+  name: 'exchangeView',
   props: {
-    memberShow: {
+    exchangeShow: {
       type: Boolean,
       default: false
     },
-    memberData: {
+    exchangeData: {
       type: Object
     }
   },
   computed: {
     show: {
       get: function () {
-        return this.memberShow
+        return this.exchangeShow
       },
       set: function () {
       }
@@ -104,24 +118,32 @@ export default {
       reserveInfo: null,
       durgList: [],
       logisticsList: [],
-      userInfo: null
+      userInfo: null,
+      exchangeInfo: null,
+      materialInfo: null
     }
   },
   watch: {
-    memberShow: function (value) {
+    exchangeShow: function (value) {
       if (value) {
-        if (this.memberData.images) {
-          this.imagesInit(this.memberData.images)
-        }
+        this.changeDetail(this.exchangeData.id)
       }
     }
   },
   methods: {
-    local (memberData) {
+    changeDetail (id) {
+      this.$get(`/cos/exchange-info/${id}`).then((r) => {
+        this.userInfo = r.data.user
+        this.exchangeInfo = r.data.exchange
+        this.materialInfo = r.data.material
+        this.imagesInit(this.materialInfo.images)
+      })
+    },
+    local (exchangeData) {
       baiduMap.clearOverlays()
       baiduMap.rMap().enableScrollWheelZoom(true)
       // eslint-disable-next-line no-undef
-      let point = new BMap.Point(memberData.longitude, memberData.latitude)
+      let point = new BMap.Point(exchangeData.longitude, exchangeData.latitude)
       baiduMap.pointAdd(point)
       baiduMap.findPoint(point, 16)
       // let driving = new BMap.DrivingRoute(baiduMap.rMap(), {renderOptions:{map: baiduMap.rMap(), autoViewport: true}});

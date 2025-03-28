@@ -1,41 +1,41 @@
 <template>
-  <a-modal v-model="show" title="新增会员缴费" @cancel="onClose" :width="550">
+  <a-modal v-model="show" title="修改商品" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose">
         取消
       </a-button>
       <a-button key="submit" type="primary" :loading="loading" @click="handleSubmit">
-        提交
+        修改
       </a-button>
     </template>
     <a-form :form="form" layout="vertical">
       <a-row :gutter="20">
-        <a-col :span="24">
-          <a-form-item label='费用金额' v-bind="formItemLayout">
-            <a-input-number :min="1" :max="99999" v-decorator="[
-              'totalPrice',
-              { rules: [{ required: true, message: '请输入费用金额!' }] }
-              ]" style="width: 100%"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="24">
-          <a-form-item label='申请标题' v-bind="formItemLayout">
+        <a-col :span="12">
+          <a-form-item label='商品名称' v-bind="formItemLayout">
             <a-input v-decorator="[
-            'auditTitle',
-            { rules: [{ required: true, message: '请输入申请标题!' }] }
+            'name',
+            { rules: [{ required: true, message: '请输入商品名称!' }] }
             ]"/>
           </a-form-item>
         </a-col>
+        <a-col :span="12">
+          <a-form-item label='所需积分' v-bind="formItemLayout">
+            <a-input-number style="width: 100%" v-decorator="[
+            'integral',
+            { rules: [{ required: true, message: '请输入所需积分!' }] }
+            ]" :min="1" :step="1"/>
+          </a-form-item>
+        </a-col>
         <a-col :span="24">
-          <a-form-item label='缴费详情' v-bind="formItemLayout">
+          <a-form-item label='商品描述' v-bind="formItemLayout">
             <a-textarea :rows="6" v-decorator="[
             'content',
-             { rules: [{ required: true, message: '请输入缴费详情!' }] }
+             { rules: [{ required: true, message: '请输入商品描述!' }] }
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='图片' v-bind="formItemLayout">
+          <a-form-item label='图册' v-bind="formItemLayout">
             <a-upload
               name="avatar"
               action="http://127.0.0.1:9527/file/fileUpload/"
@@ -63,8 +63,6 @@
 
 <script>
 import {mapState} from 'vuex'
-import moment from 'moment'
-moment.locale('zh-cn')
 function getBase64 (file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -78,9 +76,9 @@ const formItemLayout = {
   wrapperCol: { span: 24 }
 }
 export default {
-  name: 'classesAdd',
+  name: 'materialEdit',
   props: {
-    classesAddVisiable: {
+    materialEditVisiable: {
       default: false
     }
   },
@@ -90,7 +88,7 @@ export default {
     }),
     show: {
       get: function () {
-        return this.classesAddVisiable
+        return this.materialEditVisiable
       },
       set: function () {
       }
@@ -98,23 +96,16 @@ export default {
   },
   data () {
     return {
+      rowId: null,
       formItemLayout,
       form: this.$form.createForm(this),
       loading: false,
       fileList: [],
-      teacherList: [],
       previewVisible: false,
       previewImage: ''
     }
   },
-  mounted () {
-  },
   methods: {
-    selectTeacherList () {
-      this.$get('/cos/teacher-info/list/check').then((r) => {
-        this.teacherList = r.data.data
-      })
-    },
     handleCancel () {
       this.previewVisible = false
     },
@@ -128,6 +119,34 @@ export default {
     picHandleChange ({ fileList }) {
       this.fileList = fileList
     },
+    imagesInit (images) {
+      if (images !== null && images !== '') {
+        let imageList = []
+        images.split(',').forEach((image, index) => {
+          imageList.push({uid: index, name: image, status: 'done', url: 'http://127.0.0.1:9527/imagesWeb/' + image})
+        })
+        this.fileList = imageList
+      }
+    },
+    setFormValues ({...material}) {
+      this.rowId = material.id
+      let fields = ['name', 'content', 'integral']
+      let obj = {}
+      Object.keys(material).forEach((key) => {
+        if (key === 'images') {
+          this.fileList = []
+          this.imagesInit(material['images'])
+        }
+        if (key === 'status') {
+          material[key] = material[key].toString()
+        }
+        if (fields.indexOf(key) !== -1) {
+          this.form.getFieldDecorator(key)
+          obj[key] = material[key]
+        }
+      })
+      this.form.setFieldsValue(obj)
+    },
     reset () {
       this.loading = false
       this.form.resetFields()
@@ -140,14 +159,18 @@ export default {
       // 获取图片List
       let images = []
       this.fileList.forEach(image => {
-        images.push(image.response)
+        if (image.response !== undefined) {
+          images.push(image.response)
+        } else {
+          images.push(image.name)
+        }
       })
       this.form.validateFields((err, values) => {
+        values.id = this.rowId
         values.images = images.length > 0 ? images.join(',') : null
-        values.staffId = this.currentUser.userId
         if (!err) {
           this.loading = true
-          this.$post('/cos/finance-info', {
+          this.$put('/cos/material-info', {
             ...values
           }).then((r) => {
             this.reset()

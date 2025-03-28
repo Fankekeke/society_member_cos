@@ -71,7 +71,7 @@ public class DeptInfoController {
     public R save(DeptInfo deptInfo) {
         deptInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         deptInfo.setCode("DEP-" + System.currentTimeMillis());
-        // 设置所属公司
+        // 设置所属学会
         EnterpriseInfo enterpriseInfo = enterpriseInfoService.getOne(Wrappers.<EnterpriseInfo>lambdaQuery().eq(EnterpriseInfo::getUserId, deptInfo.getEnterpriseId()));
         deptInfo.setEnterpriseId(enterpriseInfo.getId());
         return R.ok(deptInfoService.save(deptInfo));

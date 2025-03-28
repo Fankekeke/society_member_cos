@@ -100,12 +100,12 @@ public class AttendanceInfoServiceImpl extends ServiceImpl<AttendanceInfoMapper,
         if (todayCheck == null) {
             attendanceInfo.setPutTakeDate(DateUtil.formatDateTime(new Date()));
             // 添加通知
-            notifyInfoService.addNotify(attendanceInfo.getStaffId(), "您好，打卡上班成功！");
+            notifyInfoService.addNotify(attendanceInfo.getStaffId(), "您好，打卡成功！");
             return this.save(attendanceInfo);
         } else {
             attendanceInfo.setOutTakeDate(DateUtil.formatDateTime(new Date()));
             // 添加通知
-            notifyInfoService.addNotify(attendanceInfo.getStaffId(), "辛苦了，下班上班成功！");
+            notifyInfoService.addNotify(attendanceInfo.getStaffId(), "辛苦了，levelRuleInfo打卡成功！");
             return this.updateById(attendanceInfo);
         }
     }

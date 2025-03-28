@@ -7,18 +7,18 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="投票编号"
+                label="活动名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.code"/>
+                <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="投票标题"
+                label="活动编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.title"/>
+                <a-input v-model="queryParams.code"/>
               </a-form-item>
             </a-col>
           </div>
@@ -31,8 +31,8 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
-        <a-button @click="batchDelete">删除</a-button>
+<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
+<!--        <a-button @click="batchDelete">删除</a-button>-->
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -46,11 +46,13 @@
                @change="handleTableChange">
         <template slot="titleShow" slot-scope="text, record">
           <template>
+            <a-badge status="processing" v-if="record.rackUp === 1"/>
+            <a-badge status="error" v-if="record.rackUp === 0"/>
             <a-tooltip>
               <template slot="title">
-                {{ record.taskTitle }}
+                {{ record.title }}
               </template>
-              {{ record.taskTitle.slice(0, 8) }} ...
+              {{ record.title.slice(0, 8) }} ...
             </a-tooltip>
           </template>
         </template>
@@ -60,55 +62,55 @@
               <template slot="title">
                 {{ record.content }}
               </template>
-              {{ record.content.slice(0, 30) }} ...
+              {{ record.content.slice(0, 40) }} ...
             </a-tooltip>
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
-          <a-icon type="bar-chart" @click="venueViewOpen(record)" title="统 计" style="margin-left: 15px"></a-icon>
+<!--          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>-->
+          <a-icon type="file-search" @click="venueViewOpen(record)" title="详 情" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
     </div>
-    <bulletin-add
-      v-if="bulletinAdd.visiable"
-      @close="handleBulletinAddClose"
-      @success="handleBulletinAddSuccess"
-      :bulletinAddVisiable="bulletinAdd.visiable">
-    </bulletin-add>
-    <bulletin-edit
-      ref="bulletinEdit"
-      @close="handleBulletinEditClose"
-      @success="handleBulletinEditSuccess"
-      :bulletinEditVisiable="bulletinEdit.visiable">
-    </bulletin-edit>
-    <ticket-view
+    <venue-add
+      v-if="venueAdd.visiable"
+      @close="handlevenueAddClose"
+      @success="handlevenueAddSuccess"
+      :venueAddVisiable="venueAdd.visiable">
+    </venue-add>
+    <venue-edit
+      ref="venueEdit"
+      @close="handlevenueEditClose"
+      @success="handlevenueEditSuccess"
+      :venueEditVisiable="venueEdit.visiable">
+    </venue-edit>
+    <venue-view
       @close="handlevenueViewClose"
       :venueShow="venueView.visiable"
       :venueData="venueView.data">
-    </ticket-view>
+    </venue-view>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import BulletinAdd from './TicketAdd.vue'
-import BulletinEdit from './TicketEdit.vue'
-import ticketView from './TicketView.vue'
+import venueAdd from './VenueAdd.vue'
+import venueEdit from './VenueEdit.vue'
+import venueView from './VenueView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
-  name: 'Bulletin',
-  components: {BulletinAdd, BulletinEdit, ticketView, RangeDate},
+  name: 'venue',
+  components: {venueAdd, venueEdit, venueView, RangeDate},
   data () {
     return {
       advanced: false,
-      bulletinAdd: {
+      venueAdd: {
         visiable: false
       },
-      bulletinEdit: {
+      venueEdit: {
         visiable: false
       },
       venueView: {
@@ -139,48 +141,68 @@ export default {
     }),
     columns () {
       return [{
-        title: '投票编号',
-        ellipsis: true,
-        dataIndex: 'code'
+        title: '活动编号',
+        dataIndex: 'code',
+        ellipsis: true
       }, {
-        title: '投票标题',
-        ellipsis: true,
-        dataIndex: 'title'
+        title: '活动名称',
+        dataIndex: 'name',
+        ellipsis: true
       }, {
-        title: '内容',
-        ellipsis: true,
-        dataIndex: 'content'
-      }, {
-        title: '开始投票时间',
-        ellipsis: true,
-        dataIndex: 'startDate'
-      }, {
-        title: '投票结束时间',
-        ellipsis: true,
-        dataIndex: 'endDate'
-      }, {
-        title: '投票图片',
-        dataIndex: 'images',
-        customRender: (text, record, index) => {
-          if (!record.images) return <a-avatar shape="square" icon="user" />
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
-            </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
-          </a-popover>
-        }
-      }, {
-        title: '创建时间',
-        dataIndex: 'createDate',
-        ellipsis: true,
+        title: '活动地点',
+        dataIndex: 'address',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
           } else {
             return '- -'
           }
-        }
+        },
+        ellipsis: true
+      }, {
+        title: '活动内容',
+        dataIndex: 'content',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
+      }, {
+        title: '开始/结束时间',
+        dataIndex: 'startDate',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return row.startDate + ' ~ ' + row.endDate
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
+      }, {
+        title: '发起人',
+        dataIndex: 'createBy',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
+      }, {
+        title: '创建时间',
+        dataIndex: 'createDate',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
       }, {
         title: '操作',
         dataIndex: 'operation',
@@ -206,32 +228,26 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.bulletinAdd.visiable = true
+      this.venueAdd.visiable = true
     },
-    handleBulletinAddClose () {
-      this.bulletinAdd.visiable = false
+    handlevenueAddClose () {
+      this.venueAdd.visiable = false
     },
-    handleBulletinAddSuccess () {
-      this.bulletinAdd.visiable = false
-      this.$message.success('新增投票成功')
+    handlevenueAddSuccess () {
+      this.venueAdd.visiable = false
+      this.$message.success('新增活动活动成功')
       this.search()
     },
     edit (record) {
-      this.$refs.bulletinEdit.setFormValues(record)
-      this.bulletinEdit.visiable = true
+      this.$refs.venueEdit.setFormValues(record)
+      this.venueEdit.visiable = true
     },
-    agentFinish (record) {
-      this.$get(`/cos/ticket-info/agent-finish`, {id: record.id}).then((r) => {
-        this.$message.success('完成！')
-        this.search()
-      })
+    handlevenueEditClose () {
+      this.venueEdit.visiable = false
     },
-    handleBulletinEditClose () {
-      this.bulletinEdit.visiable = false
-    },
-    handleBulletinEditSuccess () {
-      this.bulletinEdit.visiable = false
-      this.$message.success('修改投票成功')
+    handlevenueEditSuccess () {
+      this.venueEdit.visiable = false
+      this.$message.success('修改活动活动成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -249,7 +265,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/ticket-info/' + ids).then(() => {
+          that.$delete('/cos/exercise-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -319,7 +335,8 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      this.$get('/cos/ticket-info/page', {
+      params.enterpriseId = this.currentUser.userId
+      this.$get('/cos/exercise-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

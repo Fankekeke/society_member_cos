@@ -144,7 +144,7 @@ export default {
         ellipsis: true,
         dataIndex: 'positionName'
       }, {
-        title: '上班打卡时间',
+        title: '开始打卡时间',
         dataIndex: 'putTakeDate',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -154,7 +154,7 @@ export default {
           }
         }
       }, {
-        title: '下班打卡时间',
+        title: '打卡结束时间',
         dataIndex: 'outTakeDate',
         customRender: (text, row, index) => {
           if (text !== null) {

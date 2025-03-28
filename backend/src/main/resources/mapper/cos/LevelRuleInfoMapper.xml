@@ -2,4 +2,25 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.LevelRuleInfoMapper">
 
+    <!-- 分页获取会员等级规则信息 -->
+    <select id="queryRulePage" resultType="java.util.LinkedHashMap">
+        select
+        id,
+        code,
+        level_name,
+        check_day_min,
+        check_day_max,
+        create_date
+        from
+        level_rule_info
+        where 1 = 1
+        <if test="levelRuleInfo.code != null and levelRuleInfo.code != ''">
+            AND code LIKE CONCAT('%',#{levelRuleInfo.code},'%')
+        </if>
+        <if test="levelRuleInfo.levelName != null and levelRuleInfo.levelName != ''">
+            AND level_name LIKE CONCAT('%',#{levelRuleInfo.levelName},'%')
+        </if>
+        order by create_date desc
+
+    </select>
 </mapper>

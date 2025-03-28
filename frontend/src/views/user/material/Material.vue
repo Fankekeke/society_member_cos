@@ -7,7 +7,7 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="投票编号"
+                label="商品编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.code"/>
@@ -15,10 +15,10 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="投票标题"
+                label="商品名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.title"/>
+                <a-input v-model="queryParams.name"/>
               </a-form-item>
             </a-col>
           </div>
@@ -31,8 +31,9 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
-        <a-button @click="batchDelete">删除</a-button>
+        <a-alert :message="'我的积分：' + integral" type="info" show-icon/>
+
+<!--        <span style="margin: 12px;font-weight: 800;font-family: SimHei">{{ integral }}</span>-->
       </div>
       <!-- 表格区域 -->
       <a-table ref="TableInfo"
@@ -44,76 +45,46 @@
                :rowSelection="{selectedRowKeys: selectedRowKeys, onChange: onSelectChange}"
                :scroll="{ x: 900 }"
                @change="handleTableChange">
-        <template slot="titleShow" slot-scope="text, record">
-          <template>
-            <a-tooltip>
-              <template slot="title">
-                {{ record.taskTitle }}
-              </template>
-              {{ record.taskTitle.slice(0, 8) }} ...
-            </a-tooltip>
-          </template>
-        </template>
-        <template slot="contentShow" slot-scope="text, record">
-          <template>
-            <a-tooltip>
-              <template slot="title">
-                {{ record.content }}
-              </template>
-              {{ record.content.slice(0, 30) }} ...
-            </a-tooltip>
-          </template>
-        </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
-          <a-icon type="bar-chart" @click="venueViewOpen(record)" title="统 计" style="margin-left: 15px"></a-icon>
+          <a-icon v-if="integral >= record.integral" type="retweet" @click="exchangeOrder(record)" title="兑 换"></a-icon>
         </template>
       </a-table>
     </div>
-    <bulletin-add
-      v-if="bulletinAdd.visiable"
-      @close="handleBulletinAddClose"
-      @success="handleBulletinAddSuccess"
-      :bulletinAddVisiable="bulletinAdd.visiable">
-    </bulletin-add>
-    <bulletin-edit
-      ref="bulletinEdit"
-      @close="handleBulletinEditClose"
-      @success="handleBulletinEditSuccess"
-      :bulletinEditVisiable="bulletinEdit.visiable">
-    </bulletin-edit>
-    <ticket-view
-      @close="handlevenueViewClose"
-      :venueShow="venueView.visiable"
-      :venueData="venueView.data">
-    </ticket-view>
+    <material-add
+      v-if="materialAdd.visiable"
+      @close="handlematerialAddClose"
+      @success="handlematerialAddSuccess"
+      :materialAddVisiable="materialAdd.visiable">
+    </material-add>
+    <material-edit
+      ref="materialEdit"
+      @close="handlematerialEditClose"
+      @success="handlematerialEditSuccess"
+      :materialEditVisiable="materialEdit.visiable">
+    </material-edit>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import BulletinAdd from './TicketAdd.vue'
-import BulletinEdit from './TicketEdit.vue'
-import ticketView from './TicketView.vue'
+import materialAdd from './MaterialAdd'
+import materialEdit from './MaterialEdit'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
-  name: 'Bulletin',
-  components: {BulletinAdd, BulletinEdit, ticketView, RangeDate},
+  name: 'material',
+  components: {materialAdd, materialEdit, RangeDate},
   data () {
     return {
+      integral: 0,
       advanced: false,
-      bulletinAdd: {
+      materialAdd: {
         visiable: false
       },
-      bulletinEdit: {
+      materialEdit: {
         visiable: false
-      },
-      venueView: {
-        visiable: false,
-        data: null
       },
       queryParams: {},
       filteredInfo: null,
@@ -139,27 +110,15 @@ export default {
     }),
     columns () {
       return [{
-        title: '投票编号',
-        ellipsis: true,
-        dataIndex: 'code'
+        title: '商品编号',
+        dataIndex: 'code',
+        ellipsis: true
       }, {
-        title: '投票标题',
-        ellipsis: true,
-        dataIndex: 'title'
+        title: '商品名称',
+        dataIndex: 'name',
+        ellipsis: true
       }, {
-        title: '内容',
-        ellipsis: true,
-        dataIndex: 'content'
-      }, {
-        title: '开始投票时间',
-        ellipsis: true,
-        dataIndex: 'startDate'
-      }, {
-        title: '投票结束时间',
-        ellipsis: true,
-        dataIndex: 'endDate'
-      }, {
-        title: '投票图片',
+        title: '商品图片',
         dataIndex: 'images',
         customRender: (text, record, index) => {
           if (!record.images) return <a-avatar shape="square" icon="user" />
@@ -171,9 +130,30 @@ export default {
           </a-popover>
         }
       }, {
-        title: '创建时间',
-        dataIndex: 'createDate',
-        ellipsis: true,
+        title: '商品描述',
+        dataIndex: 'content',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
+      }, {
+        title: '所需积分',
+        dataIndex: 'integral',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
+      }, {
+        title: '销量',
+        dataIndex: 'saleNum',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -181,6 +161,17 @@ export default {
             return '- -'
           }
         }
+      }, {
+        title: '创建时间',
+        dataIndex: 'createDate',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
       }, {
         title: '操作',
         dataIndex: 'operation',
@@ -190,14 +181,24 @@ export default {
   },
   mounted () {
     this.fetch()
+    this.selectDetailByUserId()
   },
   methods: {
-    venueViewOpen (row) {
-      this.venueView.data = row
-      this.venueView.visiable = true
+    exchangeOrder (row) {
+      this.$post(`/cos/exchange-info`, {
+        materialId: row.id,
+        userId: this.currentUser.userId,
+        integral: row.integral
+      }).then((r) => {
+        this.$message.success('兑换商品成功')
+        this.selectDetailByUserId()
+        this.fetch()
+      })
     },
-    handlevenueViewClose () {
-      this.venueView.visiable = false
+    selectDetailByUserId () {
+      this.$get(`/cos/user-info/detailByUserId/${this.currentUser.userId}`).then((r) => {
+        this.integral = r.data.data.integral
+      })
     },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
@@ -206,32 +207,26 @@ export default {
       this.advanced = !this.advanced
     },
     add () {
-      this.bulletinAdd.visiable = true
+      this.materialAdd.visiable = true
     },
-    handleBulletinAddClose () {
-      this.bulletinAdd.visiable = false
+    handlematerialAddClose () {
+      this.materialAdd.visiable = false
     },
-    handleBulletinAddSuccess () {
-      this.bulletinAdd.visiable = false
-      this.$message.success('新增投票成功')
+    handlematerialAddSuccess () {
+      this.materialAdd.visiable = false
+      this.$message.success('新增商品成功')
       this.search()
     },
     edit (record) {
-      this.$refs.bulletinEdit.setFormValues(record)
-      this.bulletinEdit.visiable = true
+      this.$refs.materialEdit.setFormValues(record)
+      this.materialEdit.visiable = true
     },
-    agentFinish (record) {
-      this.$get(`/cos/ticket-info/agent-finish`, {id: record.id}).then((r) => {
-        this.$message.success('完成！')
-        this.search()
-      })
+    handlematerialEditClose () {
+      this.materialEdit.visiable = false
     },
-    handleBulletinEditClose () {
-      this.bulletinEdit.visiable = false
-    },
-    handleBulletinEditSuccess () {
-      this.bulletinEdit.visiable = false
-      this.$message.success('修改投票成功')
+    handlematerialEditSuccess () {
+      this.materialEdit.visiable = false
+      this.$message.success('修改商品成功')
       this.search()
     },
     handleDeptChange (value) {
@@ -249,7 +244,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/ticket-info/' + ids).then(() => {
+          that.$delete('/cos/material-info/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -319,7 +314,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      this.$get('/cos/ticket-info/page', {
+      this.$get('/cos/material-info/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

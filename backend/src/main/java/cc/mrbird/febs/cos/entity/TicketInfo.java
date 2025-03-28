@@ -60,6 +60,5 @@ public class TicketInfo implements Serializable {
      */
     private String createDate;
 
-    @TableField(exist = false)
     private String optionStr;
 }

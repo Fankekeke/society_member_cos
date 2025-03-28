@@ -31,12 +31,12 @@ public class AttendanceInfo implements Serializable {
     private Integer staffId;
 
     /**
-     * 上班打卡时间
+     * 打卡时间
      */
     private String putTakeDate;
 
     /**
-     * 下班打卡时间
+     * levelRuleInfo打卡时间
      */
     private String outTakeDate;
 

@@ -7,10 +7,10 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="投票编号"
+                label="投票会员"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.code"/>
+                <a-input v-model="queryParams.staffName"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
@@ -31,7 +31,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">新增</a-button>
+<!--        <a-button type="primary" ghost @click="add">新增</a-button>-->
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -70,38 +70,18 @@
         </template>
       </a-table>
     </div>
-    <bulletin-add
-      v-if="bulletinAdd.visiable"
-      @close="handleBulletinAddClose"
-      @success="handleBulletinAddSuccess"
-      :bulletinAddVisiable="bulletinAdd.visiable">
-    </bulletin-add>
-    <bulletin-edit
-      ref="bulletinEdit"
-      @close="handleBulletinEditClose"
-      @success="handleBulletinEditSuccess"
-      :bulletinEditVisiable="bulletinEdit.visiable">
-    </bulletin-edit>
-    <ticket-view
-      @close="handlevenueViewClose"
-      :venueShow="venueView.visiable"
-      :venueData="venueView.data">
-    </ticket-view>
   </a-card>
 </template>
 
 <script>
 import RangeDate from '@/components/datetime/RangeDate'
-import BulletinAdd from './TicketAdd.vue'
-import BulletinEdit from './TicketEdit.vue'
-import ticketView from './TicketView.vue'
 import {mapState} from 'vuex'
 import moment from 'moment'
 moment.locale('zh-cn')
 
 export default {
   name: 'Bulletin',
-  components: {BulletinAdd, BulletinEdit, ticketView, RangeDate},
+  components: { RangeDate},
   data () {
     return {
       advanced: false,
@@ -139,6 +119,29 @@ export default {
     }),
     columns () {
       return [{
+        title: '会员名称',
+        dataIndex: 'staffName',
+        customRender: (text, row, index) => {
+          if (text !== null) {
+            return text
+          } else {
+            return '- -'
+          }
+        },
+        ellipsis: true
+      }, {
+        title: '会员照片',
+        dataIndex: 'staffImages',
+        customRender: (text, record, index) => {
+          if (!record.staffImages) return <a-avatar shape="square" icon="user" />
+          return <a-popover>
+            <template slot="content">
+              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.staffImages.split(',')[0] } />
+            </template>
+            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.staffImages.split(',')[0] } />
+          </a-popover>
+        }
+      }, {
         title: '投票编号',
         ellipsis: true,
         dataIndex: 'code'
@@ -147,31 +150,11 @@ export default {
         ellipsis: true,
         dataIndex: 'title'
       }, {
-        title: '内容',
+        title: '投票选项',
         ellipsis: true,
-        dataIndex: 'content'
+        dataIndex: 'name'
       }, {
-        title: '开始投票时间',
-        ellipsis: true,
-        dataIndex: 'startDate'
-      }, {
-        title: '投票结束时间',
-        ellipsis: true,
-        dataIndex: 'endDate'
-      }, {
-        title: '投票图片',
-        dataIndex: 'images',
-        customRender: (text, record, index) => {
-          if (!record.images) return <a-avatar shape="square" icon="user" />
-          return <a-popover>
-            <template slot="content">
-              <a-avatar shape="square" size={132} icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
-            </template>
-            <a-avatar shape="square" icon="user" src={ 'http://127.0.0.1:9527/imagesWeb/' + record.images.split(',')[0] } />
-          </a-popover>
-        }
-      }, {
-        title: '创建时间',
+        title: '投票时间',
         dataIndex: 'createDate',
         ellipsis: true,
         customRender: (text, row, index) => {
@@ -181,10 +164,6 @@ export default {
             return '- -'
           }
         }
-      }, {
-        title: '操作',
-        dataIndex: 'operation',
-        scopedSlots: {customRender: 'operation'}
       }]
     }
   },
@@ -221,7 +200,7 @@ export default {
       this.bulletinEdit.visiable = true
     },
     agentFinish (record) {
-      this.$get(`/cos/ticket-info/agent-finish`, {id: record.id}).then((r) => {
+      this.$get(`/cos/ticket-record/agent-finish`, {id: record.id}).then((r) => {
         this.$message.success('完成！')
         this.search()
       })
@@ -249,7 +228,7 @@ export default {
         centered: true,
         onOk () {
           let ids = that.selectedRowKeys.join(',')
-          that.$delete('/cos/ticket-info/' + ids).then(() => {
+          that.$delete('/cos/ticket-record/' + ids).then(() => {
             that.$message.success('删除成功')
             that.selectedRowKeys = []
             that.search()
@@ -319,7 +298,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      this.$get('/cos/ticket-info/page', {
+      this.$get('/cos/ticket-record/page', {
         ...params
       }).then((r) => {
         let data = r.data.data

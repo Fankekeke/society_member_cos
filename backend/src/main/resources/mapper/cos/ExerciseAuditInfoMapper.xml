@@ -2,4 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.ExerciseAuditInfoMapper">
 
+    <!-- 分页获取活动预约信息 -->
+    <select id="queryAuditPage" resultType="java.util.LinkedHashMap">
+        select
+        eai.id,
+        eai.user_id,
+        eai.exercise_id,
+        eai.content,
+        eai.status,
+        eai.create_date,
+        eai.audit_date,
+        si.name as staffName,
+        si.images as staffImages,
+        si.phone,
+        ei.name as exerciseName,
+        ei.start_date,
+        ei.end_date,
+        ei.address
+        from
+        exercise_audit_info eai
+        left join staff_info si on (si.id = eai.user_id)
+        left join exercise_info ei on (ei.id = eai.exercise_id)
+        where 1 = 1
+        <if test="exerciseAuditInfo.staffName != null and exerciseAuditInfo.staffName != ''">
+            AND si.name LIKE CONCAT('%',#{exerciseAuditInfo.staffName},'%')
+        </if>
+        <if test="exerciseAuditInfo.exerciseName != null and exerciseAuditInfo.exerciseName != ''">
+            AND ei.name LIKE CONCAT('%',#{exerciseAuditInfo.exerciseName},'%')
+        </if>
+        order by eai.create_date desc
+
+    </select>
 </mapper>

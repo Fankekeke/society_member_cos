@@ -96,7 +96,7 @@ public class ConferenceInfoController {
         StaffInfo staffInfo = staffInfoService.getOne(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getUserId, conferenceInfo.getStaffId()));
         if (staffInfo != null) {
             conferenceInfo.setStaffId(staffInfo.getId());
-            // 获取会员所属公司
+            // 获取会员所属学会
             conferenceInfo.setEnterpriseId(staffInfo.getEnterpriseId());
         }
         List<String> staffIds = Arrays.asList(conferenceInfo.getStaffIds().split(","));

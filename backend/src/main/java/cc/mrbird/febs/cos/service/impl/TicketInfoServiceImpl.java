@@ -15,7 +15,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 投票管理 实现层
@@ -54,15 +58,28 @@ public class TicketInfoServiceImpl extends ServiceImpl<TicketInfoMapper, TicketI
         LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>() {
             {
                 put("ticketInfo", null);
-                put("ticketOptionInfo", null);
-                put("ticketRecord", null);
             }
         };
         TicketInfo ticketInfo = this.getById(id);
         if (ticketInfo != null) {
             result.put("ticketInfo", ticketInfo);
-            result.put("ticketOptionInfo", ticketOptionInfoService.list(Wrappers.<TicketOptionInfo>lambdaQuery().eq(TicketOptionInfo::getTicketId, id)));
-            result.put("ticketRecord", ticketRecordService.list(Wrappers.<TicketRecord>lambdaQuery().eq(TicketRecord::getTicketId, id)));
+
+            List<TicketOptionInfo> ticketOptionInfo = ticketOptionInfoService.list(Wrappers.<TicketOptionInfo>lambdaQuery().eq(TicketOptionInfo::getTicketId, id));
+            List<TicketRecord> ticketRecord = ticketRecordService.list(Wrappers.<TicketRecord>lambdaQuery().eq(TicketRecord::getTicketId, id));
+            Map<Integer, List<TicketRecord>> ticketMap = ticketRecord.stream().collect(Collectors.groupingBy(TicketRecord::getOptionId));
+
+            List<LinkedHashMap<String, Object>> ticketResult = new ArrayList<>();
+            // 处理投票结果
+            ticketOptionInfo.forEach(item -> {
+                LinkedHashMap<String, Object> map = new LinkedHashMap<String, Object>() {
+                    {
+                        put("name", item.getName());
+                        put("count", ticketMap.get(item.getId()) == null ? 0 : ticketMap.get(item.getId()).size());
+                    }
+                };
+                ticketResult.add(map);
+            });
+            result.put("ticketOptionInfo", ticketResult);
         }
         return result;
     }

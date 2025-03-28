@@ -73,7 +73,7 @@ public class FileInfoController {
     public R save(FileInfo fileInfo) {
         fileInfo.setCode("FI-" + System.currentTimeMillis());
         fileInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
-        // 设置所属公司
+        // 设置所属学会
         EnterpriseInfo enterpriseInfo = enterpriseInfoService.getOne(Wrappers.<EnterpriseInfo>lambdaQuery().eq(EnterpriseInfo::getUserId, fileInfo.getEnterpriseId()));
         if (enterpriseInfo != null) {
             fileInfo.setEnterpriseId(enterpriseInfo.getId());

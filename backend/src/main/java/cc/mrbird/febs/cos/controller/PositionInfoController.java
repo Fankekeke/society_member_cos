@@ -71,7 +71,7 @@ public class PositionInfoController {
     public R save(PositionInfo positionInfo) {
         positionInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         positionInfo.setCode("POS-" + System.currentTimeMillis());
-        // 设置所属公司
+        // 设置所属学会
         EnterpriseInfo enterpriseInfo = enterpriseInfoService.getOne(Wrappers.<EnterpriseInfo>lambdaQuery().eq(EnterpriseInfo::getUserId, positionInfo.getEnterpriseId()));
         positionInfo.setEnterpriseId(enterpriseInfo.getId());
         return R.ok(positionInfoService.save(positionInfo));

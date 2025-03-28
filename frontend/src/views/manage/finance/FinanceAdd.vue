@@ -11,10 +11,10 @@
     <a-form :form="form" layout="vertical">
       <a-row :gutter="20">
         <a-col :span="24">
-          <a-form-item label='申请金额' v-bind="formItemLayout">
+          <a-form-item label='费用金额' v-bind="formItemLayout">
             <a-input-number :min="1" :max="99999" v-decorator="[
               'totalPrice',
-              { rules: [{ required: true, message: '请输入申请金额!' }] }
+              { rules: [{ required: true, message: '请输入费用金额!' }] }
               ]" style="width: 100%"/>
           </a-form-item>
         </a-col>

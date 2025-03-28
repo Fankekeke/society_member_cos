@@ -148,7 +148,7 @@ public class AttendanceInfoController {
     public R edit(AttendanceInfo attendanceInfo) {
         attendanceInfo.setOutTakeDate(DateUtil.formatDateTime(new Date()));
         // 添加通知
-        notifyInfoService.addNotify(attendanceInfo.getStaffId(), "辛苦了，下班上班成功！");
+        notifyInfoService.addNotify(attendanceInfo.getStaffId(), "辛苦了，levelRuleInfo打卡成功！");
         return R.ok(attendanceInfoService.updateById(attendanceInfo));
     }
 

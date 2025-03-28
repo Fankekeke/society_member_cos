@@ -85,6 +85,13 @@
             ]"/>
               </a-form-item>
             </a-col>
+            <a-col :span="12">
+              <a-form-item label='积分' v-bind="formItemLayout">
+                <a-input disabled v-decorator="[
+            'integral'
+            ]"/>
+              </a-form-item>
+            </a-col>
             <a-col :span="24">
               <a-form-item label='照片' v-bind="formItemLayout">
                 <a-upload
@@ -224,7 +231,7 @@ export default {
     },
     setFormValues ({...expert}) {
       this.rowId = expert.id
-      let fields = ['name', 'sex', 'birthday', 'nativeAddress', 'idCard', 'diploma', 'schoolName', 'address', 'mail', 'phone', 'deptId', 'positionId']
+      let fields = ['name', 'sex', 'birthday', 'nativeAddress', 'idCard', 'diploma', 'schoolName', 'address', 'mail', 'phone', 'deptId', 'positionId', 'integral']
       let obj = {}
       Object.keys(expert).forEach((key) => {
         if (key === 'images') {

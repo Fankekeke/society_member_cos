@@ -15,13 +15,12 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="审批状态"
+                label="支付状态"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-select v-model="queryParams.status">
-                  <a-select-option value="0">未审批</a-select-option>
-                  <a-select-option value="1">通过</a-select-option>
-                  <a-select-option value="2">驳回</a-select-option>
+                  <a-select-option value="0">未支付</a-select-option>
+                  <a-select-option value="1">已支付</a-select-option>
                 </a-select>
               </a-form-item>
             </a-col>
@@ -156,22 +155,20 @@ export default {
         dataIndex: 'auditTitle',
         ellipsis: true
       }, {
-        title: '审批状态',
+        title: '支付状态',
         dataIndex: 'status',
         customRender: (text, row, index) => {
           switch (text) {
             case '0':
-              return <a-tag>未审批</a-tag>
+              return <a-tag color="#f50">未支付</a-tag>
             case '1':
-              return <a-tag>通过</a-tag>
-            case '2':
-              return <a-tag>驳回</a-tag>
+              return <a-tag color="#108ee9">已支付</a-tag>
             default:
               return '- -'
           }
         }
       }, {
-        title: '申请金额',
+        title: '费用金额',
         dataIndex: 'totalPrice',
         customRender: (text, row, index) => {
           if (text !== null) {

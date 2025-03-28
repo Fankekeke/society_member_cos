@@ -39,10 +39,10 @@ export default {
   methods: {
     checkWork () {
       if (this.checkCount == null) {
-        return '上班打卡'
+        return '开始打卡'
       }
       if (this.checkCount != null && this.checkCount.outTakeDate == null) {
-        return '下班打卡'
+        return '结束打卡'
       }
       if (this.checkCount != null && this.checkCount.outTakeDate != null) {
         return '已打卡'
@@ -57,7 +57,7 @@ export default {
     checkAttendance () {
       if (this.checkCount == null) {
         this.$post(`/cos/attendance-info`, {staffId: this.currentUser.userId}).then((r) => {
-          this.$message.success('上班打卡成功')
+          this.$message.success('开始打卡成功')
           this.dataInit()
           this.queryTodayCheck()
         })
@@ -65,7 +65,7 @@ export default {
       }
       if (this.checkCount != null && this.checkCount.outTakeDate == null) {
         this.$put(`/cos/attendance-info`, this.checkCount).then((r) => {
-          this.$message.success('下班打卡成功')
+          this.$message.success('结束打卡成功')
           this.dataInit()
           this.queryTodayCheck()
         })
@@ -89,7 +89,7 @@ export default {
       let listData = []
       this.courseInfo.forEach(item => {
         if ((moment(value).format('YYYY-MM-DD')) === (moment(item.putTakeDate).format('YYYY-MM-DD'))) {
-          listData.push({type: 'success', content: '上班- ' + item.putTakeDate + ' 下班-' + (item.outTakeDate ? item.outTakeDate : '未打卡')})
+          listData.push({type: 'success', content: '开始- ' + item.putTakeDate + ' 结束-' + (item.outTakeDate ? item.outTakeDate : '未打卡')})
         }
       })
       return listData || []

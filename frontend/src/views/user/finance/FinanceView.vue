@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="会员财务详情" @cancel="onClose" :width="800">
+  <a-modal v-model="show" title="会员缴费详情" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
@@ -23,13 +23,12 @@
         <a-col :span="8"><b>创建时间：</b>
           {{ memberData.createDate }}
         </a-col>
-        <a-col :span="8"><b>申请金额：</b>
+        <a-col :span="8"><b>费用金额：</b>
           {{ memberData.totalPrice }} 元
         </a-col>
-        <a-col :span="8"><b>审批状态：</b>
-          <span v-if="memberData.status == 0">未审批</span>
-          <span v-if="memberData.status == 1">通过</span>
-          <span v-if="memberData.status == 2">驳回</span>
+        <a-col :span="8"><b>支付状态：</b>
+          <span v-if="memberData.status == 0">未支付</span>
+          <span v-if="memberData.status == 1">已支付</span>
         </a-col>
       </a-row>
       <br/>

@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="活动详情" @cancel="onClose" :width="1000">
+  <a-modal v-model="show" title="投票详情" @cancel="onClose" :width="1000">
     <template slot="footer">
       <a-button key="back" @click="onClose" type="danger">
         关闭
@@ -7,15 +7,12 @@
     </template>
     <div style="font-size: 13px;font-family: SimHei" v-if="venueData !== null">
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">基础信息</span></a-col>
-        <a-col :span="8"><b>活动编号：</b>
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">投票信息</span></a-col>
+        <a-col :span="8"><b>投票编号：</b>
           {{ venueData.code }}
         </a-col>
-        <a-col :span="8"><b>活动名称：</b>
-          {{ venueData.name ? venueData.name : '- -' }}
-        </a-col>
-        <a-col :span="8"><b>开始时间：</b>
-          {{ venueData.startDate ? venueData.startDate : '- -' }}
+        <a-col :span="8"><b>投票标题：</b>
+          {{ venueData.title ? venueData.title : '- -' }}
         </a-col>
       </a-row>
       <br/>
@@ -23,17 +20,8 @@
         <a-col :span="8"><b>结束时间：</b>
           {{ venueData.endDate }}
         </a-col>
-        <a-col :span="8"><b>经度：</b>
-          {{ venueData.longitude }}
-        </a-col>
-        <a-col :span="8"><b>纬度：</b>
-          {{ venueData.latitude }}
-        </a-col>
-      </a-row>
-      <br/>
-      <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="16"><b>详细地址：</b>
-          {{ venueData.address }}
+        <a-col :span="8"><b>开始时间：</b>
+          {{ venueData.startDate ? venueData.startDate : '- -' }}
         </a-col>
         <a-col :span="8"><b>创建时间：</b>
           {{ venueData.createDate }}
@@ -41,20 +29,20 @@
       </a-row>
       <br/>
       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col :span="24"><b>活动内容：</b>
-          {{ venueData.content }}
+        <a-col style="margin-bottom: 15px"><span style="font-size: 15px;font-weight: 650;color: #000c17">投票内容</span></a-col>
+        <a-col :span="24">
+          {{ venueData.content == null ? '- -' : venueData.content }}
         </a-col>
       </a-row>
       <br/>
-      <br/>
-       <a-row style="padding-left: 24px;padding-right: 24px;">
-        <a-col style="margin-bottom: 5px"><span style="font-size: 15px;font-weight: 650;color: #000c17">活动位置</span></a-col>
+      <a-row style="margin-top: 15px" :gutter="25">
+        <a-col :span="24">
+          <div hoverable :bordered="false" style="width: 100%">
+            <a-skeleton active v-if="chartLoading" />
+            <apexchart v-if="!chartLoading" type="bar" height="300" :options="chartOptions1" :series="series1"></apexchart>
+          </div>
+        </a-col>
       </a-row>
-      <div>
-        <a-card :bordered="false" style="height: 500px">
-          <div id="areas" style="width: 100%;height: 450px;box-shadow: 3px 3px 3px rgba(0, 0, 0, .2);background:#ec9e3c;color:#fff"></div>
-        </a-card>
-      </div>
     </div>
   </a-modal>
 </template>
@@ -93,6 +81,53 @@ export default {
   },
   data () {
     return {
+      series1: [{
+        name: '票量',
+        data: []
+      }],
+      chartOptions1: {
+        chart: {
+          type: 'bar',
+          height: 300
+        },
+        title: {
+          text: '投票统计',
+          align: 'left'
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: '55%'
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          show: true,
+          width: 2,
+          colors: ['transparent']
+        },
+        xaxis: {
+          categories: []
+        },
+        yaxis: {
+          title: {
+            text: ''
+          }
+        },
+        fill: {
+          opacity: 1
+        },
+        tooltip: {
+          y: {
+            formatter: function (val) {
+              return val + ' 票'
+            }
+          }
+        }
+      },
+      chartLoading: false,
       loading: false,
       fileList: [],
       previewVisible: false,
@@ -107,17 +142,22 @@ export default {
   watch: {
     venueShow: function (value) {
       if (value) {
-        // this.imagesInit(this.venueData.images)
-        setTimeout(() => {
-          baiduMap.initMap('areas')
-          setTimeout(() => {
-            this.local(this.venueData)
-          }, 500)
-        }, 200)
+        this.queryDetail(this.venueData.id)
       }
     }
   },
   methods: {
+    queryDetail (id) {
+      this.chartLoading = true
+      this.$get(`/cos/ticket-info/queryDetail/${id}`).then((r) => {
+        console.log(r.data.ticketOptionInfo)
+        this.series1[0].data = r.data.ticketOptionInfo.map(obj => { return obj.count })
+        this.chartOptions1.xaxis.categories = r.data.ticketOptionInfo.map(obj => { return obj.name })
+        setTimeout(() => {
+          this.chartLoading = false
+        }, 500)
+      })
+    },
     local (venueData) {
       baiduMap.clearOverlays()
       baiduMap.rMap().enableScrollWheelZoom(true)

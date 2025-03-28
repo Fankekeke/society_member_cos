@@ -119,10 +119,6 @@ public class StaffInfoController {
         staffInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         staffInfo.setCode("STF-" + System.currentTimeMillis());
 
-        // 设置所属公司
-        EnterpriseInfo enterpriseInfo = enterpriseInfoService.getOne(Wrappers.<EnterpriseInfo>lambdaQuery().eq(EnterpriseInfo::getUserId, staffInfo.getEnterpriseId()));
-        staffInfo.setEnterpriseId(enterpriseInfo.getId());
-
         userService.registStaff(staffInfo.getCode(), "1234qwer", staffInfo);
         return R.ok(true);
     }

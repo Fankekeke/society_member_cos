@@ -101,7 +101,7 @@ public class AgentInfoController {
     public R save(AgentInfo agentInfo) {
         notifyInfoService.addNotify(agentInfo.getStaffId(), "您好，您有新的任务已派发，请及时查看处理");
         agentInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
-        // 获取会员所属公司
+        // 获取会员所属学会
         StaffInfo staffInfo = staffInfoService.getById(agentInfo.getStaffId());
         if (staffInfo != null) {
             agentInfo.setEnterpriseId(staffInfo.getEnterpriseId());

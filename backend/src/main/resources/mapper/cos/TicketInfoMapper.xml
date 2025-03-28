@@ -2,4 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.TicketInfoMapper">
 
+    <!-- 分页获取投票管理信息 -->
+    <select id="queryTicketPage" resultType="java.util.LinkedHashMap">
+        select
+        id,
+        code,
+        title,
+        content,
+        images,
+        start_date,
+        end_date,
+        option_str,
+        create_date
+        from
+        ticket_info
+        where 1 = 1
+        <if test="ticketInfo.code != null and ticketInfo.code != ''">
+            AND code LIKE CONCAT('%',#{ticketInfo.code},'%')
+        </if>
+        <if test="ticketInfo.title != null and ticketInfo.title != ''">
+            AND title LIKE CONCAT('%',#{ticketInfo.title},'%')
+        </if>
+        order by create_date desc
+
+    </select>
 </mapper>

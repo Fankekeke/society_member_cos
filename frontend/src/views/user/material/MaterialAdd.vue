@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="新增会员缴费" @cancel="onClose" :width="550">
+  <a-modal v-model="show" title="新增商品" @cancel="onClose" :width="800">
     <template slot="footer">
       <a-button key="back" @click="onClose">
         取消
@@ -10,32 +10,32 @@
     </template>
     <a-form :form="form" layout="vertical">
       <a-row :gutter="20">
-        <a-col :span="24">
-          <a-form-item label='费用金额' v-bind="formItemLayout">
-            <a-input-number :min="1" :max="99999" v-decorator="[
-              'totalPrice',
-              { rules: [{ required: true, message: '请输入费用金额!' }] }
-              ]" style="width: 100%"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="24">
-          <a-form-item label='申请标题' v-bind="formItemLayout">
+        <a-col :span="12">
+          <a-form-item label='商品名称' v-bind="formItemLayout">
             <a-input v-decorator="[
-            'auditTitle',
-            { rules: [{ required: true, message: '请输入申请标题!' }] }
+            'name',
+            { rules: [{ required: true, message: '请输入商品名称!' }] }
             ]"/>
           </a-form-item>
         </a-col>
+        <a-col :span="12">
+          <a-form-item label='所需积分' v-bind="formItemLayout">
+            <a-input-number style="width: 100%" v-decorator="[
+            'integral',
+            { rules: [{ required: true, message: '请输入所需积分!' }] }
+            ]" :min="1" :step="1"/>
+          </a-form-item>
+        </a-col>
         <a-col :span="24">
-          <a-form-item label='缴费详情' v-bind="formItemLayout">
+          <a-form-item label='商品描述' v-bind="formItemLayout">
             <a-textarea :rows="6" v-decorator="[
             'content',
-             { rules: [{ required: true, message: '请输入缴费详情!' }] }
+             { rules: [{ required: true, message: '请输入商品描述!' }] }
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='图片' v-bind="formItemLayout">
+          <a-form-item label='图册' v-bind="formItemLayout">
             <a-upload
               name="avatar"
               action="http://127.0.0.1:9527/file/fileUpload/"
@@ -63,8 +63,6 @@
 
 <script>
 import {mapState} from 'vuex'
-import moment from 'moment'
-moment.locale('zh-cn')
 function getBase64 (file) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
@@ -78,9 +76,9 @@ const formItemLayout = {
   wrapperCol: { span: 24 }
 }
 export default {
-  name: 'classesAdd',
+  name: 'materialAdd',
   props: {
-    classesAddVisiable: {
+    materialAddVisiable: {
       default: false
     }
   },
@@ -90,7 +88,7 @@ export default {
     }),
     show: {
       get: function () {
-        return this.classesAddVisiable
+        return this.materialAddVisiable
       },
       set: function () {
       }
@@ -102,19 +100,11 @@ export default {
       form: this.$form.createForm(this),
       loading: false,
       fileList: [],
-      teacherList: [],
       previewVisible: false,
       previewImage: ''
     }
   },
-  mounted () {
-  },
   methods: {
-    selectTeacherList () {
-      this.$get('/cos/teacher-info/list/check').then((r) => {
-        this.teacherList = r.data.data
-      })
-    },
     handleCancel () {
       this.previewVisible = false
     },
@@ -143,11 +133,11 @@ export default {
         images.push(image.response)
       })
       this.form.validateFields((err, values) => {
+        values.merchantId = this.currentUser.userId
         values.images = images.length > 0 ? images.join(',') : null
-        values.staffId = this.currentUser.userId
         if (!err) {
           this.loading = true
-          this.$post('/cos/finance-info', {
+          this.$post('/cos/material-info', {
             ...values
           }).then((r) => {
             this.reset()

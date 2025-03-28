@@ -31,7 +31,7 @@ public class TicketRecordController {
      */
     @GetMapping("/page")
     public R page(Page<TicketRecord> page, TicketRecord ticketRecord) {
-        return R.ok();
+        return R.ok(ticketRecordService.queryTicketPage(page, ticketRecord));
     }
 
     /**

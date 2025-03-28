@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="修改公告" @cancel="onClose" :width="450">
+  <a-modal v-model="show" title="修改等级规则" @cancel="onClose" :width="450">
     <template slot="footer">
       <a-button key="back" @click="onClose">
         取消
@@ -131,7 +131,7 @@ export default {
         values.id = this.rowId
         if (!err) {
           this.loading = true
-          this.$put('/cos/price-rules', {
+          this.$put('/cos/level-rule-info', {
             ...values
           }).then((r) => {
             this.reset()
