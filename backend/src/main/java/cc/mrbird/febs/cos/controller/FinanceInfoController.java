@@ -1,26 +1,27 @@
 package cc.mrbird.febs.cos.controller;
 
 
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.utils.R;
-import cc.mrbird.febs.cos.entity.EnterpriseInfo;
-import cc.mrbird.febs.cos.entity.FinanceInfo;
-import cc.mrbird.febs.cos.entity.LeaveInfo;
-import cc.mrbird.febs.cos.entity.StaffInfo;
+import cc.mrbird.febs.cos.entity.*;
 import cc.mrbird.febs.cos.service.IFinanceInfoService;
 import cc.mrbird.febs.cos.service.INotifyInfoService;
 import cc.mrbird.febs.cos.service.IStaffInfoService;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- * 财务申请 控制层
+ * 会员缴费 控制层
  *
  * @author FanK fan1ke2ke@gmail.com
  */
@@ -36,10 +37,10 @@ public class FinanceInfoController {
     private final INotifyInfoService notifyInfoService;
 
     /**
-     * 分页获取财务申请
+     * 分页获取会员缴费
      *
      * @param page        分页对象
-     * @param financeInfo 财务申请
+     * @param financeInfo 会员缴费
      * @return 结果
      */
     @GetMapping("/page")
@@ -48,7 +49,7 @@ public class FinanceInfoController {
     }
 
     /**
-     * 审核财务申请
+     * 审核会员缴费
      *
      * @param id     主键ID
      * @param status 状态
@@ -60,7 +61,7 @@ public class FinanceInfoController {
         leaveInfo.setAuditDate(DateUtil.formatDateTime(new Date()));
         leaveInfo.setStatus(status);
         // 添加通知
-        notifyInfoService.addNotify(leaveInfo.getStaffId(), "您好，您的财务申请【" + leaveInfo.getTotalPrice() + "】已" + ("1".equals(status) ? "通过" : "驳回") + "，请等待打卡！");
+        notifyInfoService.addNotify(leaveInfo.getStaffId(), "您好，您的会员缴费【" + leaveInfo.getTotalPrice() + "】已" + ("1".equals(status) ? "通过" : "驳回") + "，请等待打卡！");
         return R.ok(financeInfoService.updateById(leaveInfo));
     }
 
@@ -72,11 +73,11 @@ public class FinanceInfoController {
      */
     @GetMapping("/payment")
     public R payment(String orderCode) {
-        return R.ok(financeInfoService.update(Wrappers.<FinanceInfo>lambdaUpdate().set(FinanceInfo::getStatus, "1").eq(FinanceInfo::getCode, orderCode)));
+        return R.ok(financeInfoService.update(Wrappers.<FinanceInfo>lambdaUpdate().set(FinanceInfo::getStatus, "1").set(FinanceInfo::getAuditDate, DateUtil.formatDateTime(new Date())).eq(FinanceInfo::getCode, orderCode)));
     }
 
     /**
-     * 查询财务申请详情
+     * 查询会员缴费详情
      *
      * @param id 主键ID
      * @return 结果
@@ -87,7 +88,7 @@ public class FinanceInfoController {
     }
 
     /**
-     * 查询财务申请列表
+     * 查询会员缴费列表
      *
      * @return 结果
      */
@@ -97,30 +98,41 @@ public class FinanceInfoController {
     }
 
     /**
-     * 新增财务申请
+     * 新增会员缴费
      *
-     * @param financeInfo 财务申请
+     * @param financeInfo 会员缴费
      * @return 结果
      */
     @PostMapping
-    public R save(FinanceInfo financeInfo) {
-        StaffInfo staffInfo = staffInfoService.getOne(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getUserId, financeInfo.getStaffId()));
-        if (staffInfo != null) {
-            financeInfo.setStaffId(staffInfo.getId());
-            // 设置所属公司
-            financeInfo.setEnterpriseId(staffInfo.getEnterpriseId());
+    @Transactional(rollbackFor = Exception.class)
+    public R save(FinanceInfo financeInfo) throws FebsException {
+        List<StaffInfo> staffInfoList = staffInfoService.list();
+        if (CollectionUtil.isEmpty(staffInfoList)) {
+            throw new FebsException("暂无员工信息，请先添加员工信息！");
         }
-        // 申请单号
-        financeInfo.setCode("FIN-" + System.currentTimeMillis());
-        financeInfo.setStatus("0");
-        financeInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
-        // 添加通知
-        notifyInfoService.addNotify(financeInfo.getStaffId(), "您好，您申请的" + financeInfo.getAuditTitle() + "申请已提交，请耐心等待审核！");
-        return R.ok(financeInfoService.save(financeInfo));
+        // 待添加的缴费记录
+        List<FinanceInfo> financeInfoList = new ArrayList<>();
+        for (StaffInfo staffInfo : staffInfoList) {
+            FinanceInfo financeAddInfo = new FinanceInfo();
+            financeAddInfo.setStaffId(staffInfo.getId());
+            financeAddInfo.setAuditTitle("你好，" + staffInfo.getName() + "，" + financeInfo.getAuditTitle());
+            // 申请单号
+            financeAddInfo.setCode("FIN-" + System.currentTimeMillis() + staffInfo.getId());
+            financeAddInfo.setStatus("0");
+            financeAddInfo.setTotalPrice(financeInfo.getTotalPrice());
+            financeAddInfo.setContent(financeInfo.getContent());
+            financeAddInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
+            financeAddInfo.setImages(financeInfo.getImages());
+            financeInfoList.add(financeAddInfo);
+            // 添加通知
+            notifyInfoService.addNotify(financeAddInfo.getStaffId(),  financeAddInfo.getAuditTitle() + ", 请前往支付！");
+        }
+
+        return R.ok(financeInfoService.saveBatch(financeInfoList));
     }
 
     /**
-     * 审核财务申请
+     * 审核会员缴费
      *
      * @param financeInfo 申请信息
      * @return 结果
@@ -136,9 +148,9 @@ public class FinanceInfoController {
     }
 
     /**
-     * 修改财务申请
+     * 修改会员缴费
      *
-     * @param financeInfo 财务申请
+     * @param financeInfo 会员缴费
      * @return 结果
      */
     @PutMapping
@@ -147,10 +159,10 @@ public class FinanceInfoController {
     }
 
     /**
-     * 删除财务申请
+     * 删除会员缴费
      *
      * @param ids ids
-     * @return 财务申请
+     * @return 会员缴费
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {

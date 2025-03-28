@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * 代办任务 实现层
+ * 研究任务 实现层
  *
  * @author FanK fan1ke2ke@gmail.com
  */
@@ -42,10 +42,10 @@ public class AgentInfoServiceImpl extends ServiceImpl<AgentInfoMapper, AgentInfo
     private final IBulletinInfoService bulletinInfoService;
 
     /**
-     * 分页获取代办任务
+     * 分页获取研究任务
      *
      * @param page      分页对象
-     * @param agentInfo 代办任务
+     * @param agentInfo 研究任务
      * @return 结果
      */
     @Override
@@ -56,7 +56,7 @@ public class AgentInfoServiceImpl extends ServiceImpl<AgentInfoMapper, AgentInfo
     /**
      * 主页数据
      *
-     * @param enterpriseId 校企ID
+     * @param enterpriseId 会员ID
      * @return 结果
      */
     @Override

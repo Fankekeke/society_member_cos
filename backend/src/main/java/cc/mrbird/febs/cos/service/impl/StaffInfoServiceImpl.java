@@ -76,7 +76,7 @@ public class StaffInfoServiceImpl extends ServiceImpl<StaffInfoMapper, StaffInfo
     /**
      * 查询会员信息
      *
-     * @param enterpriseId 校企id
+     * @param enterpriseId 会员id
      * @return 结果
      */
     @Override
@@ -87,7 +87,7 @@ public class StaffInfoServiceImpl extends ServiceImpl<StaffInfoMapper, StaffInfo
     /**
      * 获取会员列表
      *
-     * @param enterpriseId 校企ID
+     * @param enterpriseId 会员ID
      * @return 结果
      */
     @Override

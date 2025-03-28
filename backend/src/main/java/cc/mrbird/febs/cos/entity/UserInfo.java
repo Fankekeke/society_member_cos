@@ -35,7 +35,7 @@ public class UserInfo implements Serializable {
     private String code;
 
     /**
-     * 校企名称
+     * 会员名称
      */
     private String name;
 

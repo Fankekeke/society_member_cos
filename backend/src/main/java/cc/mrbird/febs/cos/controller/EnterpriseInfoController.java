@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
- * 校企信息管理 控制层
+ * 会员信息管理 控制层
  *
  * @author FanK
  */
@@ -32,10 +32,10 @@ public class EnterpriseInfoController {
     private final UserService userService;
 
     /**
-     * 分页获取校企信息信息
+     * 分页获取会员信息信息
      *
      * @param page           分页对象
-     * @param enterpriseInfo 校企信息信息
+     * @param enterpriseInfo 会员信息信息
      * @return 结果
      */
     @GetMapping("/page")
@@ -55,9 +55,9 @@ public class EnterpriseInfoController {
     }
 
     /**
-     * 根据编号查询校企信息
+     * 根据编号查询会员信息
      *
-     * @param enterpriseCode 校企编号
+     * @param enterpriseCode 会员编号
      * @return 结果
      */
     @GetMapping("/detail/code/{enterpriseCode}")
@@ -66,9 +66,9 @@ public class EnterpriseInfoController {
     }
 
     /**
-     * 根据ID查询校企信息
+     * 根据ID查询会员信息
      *
-     * @param enterpriseId 校企编号
+     * @param enterpriseId 会员编号
      * @return 结果
      */
     @GetMapping("/detail/id/{enterpriseId}")
@@ -82,14 +82,14 @@ public class EnterpriseInfoController {
     @GetMapping("/template")
     public void downloadTemplate(HttpServletResponse response) {
         try {
-            FileDownloadUtils.downloadTemplate(response, "校企基础数据.xlsx");
+            FileDownloadUtils.downloadTemplate(response, "会员基础数据.xlsx");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * 导入校企信息列表
+     * 导入会员信息列表
      */
     @PostMapping("/import")
     public R importExcel(@RequestParam("file") MultipartFile file) {
@@ -106,7 +106,7 @@ public class EnterpriseInfoController {
     }
 
     /**
-     * 查询校企信息信息详情
+     * 查询会员信息信息详情
      *
      * @param id 主键ID
      * @return 结果
@@ -117,7 +117,7 @@ public class EnterpriseInfoController {
     }
 
     /**
-     * 查询校企信息信息列表
+     * 查询会员信息信息列表
      *
      * @return 结果
      */
@@ -127,9 +127,9 @@ public class EnterpriseInfoController {
     }
 
     /**
-     * 新增校企信息信息
+     * 新增会员信息信息
      *
-     * @param enterpriseInfo 校企信息信息
+     * @param enterpriseInfo 会员信息信息
      * @return 结果
      */
     @PostMapping
@@ -140,9 +140,9 @@ public class EnterpriseInfoController {
     }
 
     /**
-     * 修改校企信息信息
+     * 修改会员信息信息
      *
-     * @param enterpriseInfo 校企信息信息
+     * @param enterpriseInfo 会员信息信息
      * @return 结果
      */
     @PutMapping
@@ -151,10 +151,10 @@ public class EnterpriseInfoController {
     }
 
     /**
-     * 删除校企信息信息
+     * 删除会员信息信息
      *
      * @param ids ids
-     * @return 校企信息信息
+     * @return 会员信息信息
      */
     @DeleteMapping("/{ids}")
     public R deleteByIds(@PathVariable("ids") List<Integer> ids) {

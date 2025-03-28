@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * 财务申请
+ * 会员缴费
  *
  * @author FanK fan1ke2ke@gmail.com
  */
@@ -44,7 +44,7 @@ public class FinanceInfo implements Serializable {
     private String content;
 
     /**
-     * 状态（0.未审批 1.通过 2.驳回）
+     * 状态（0.未支付 1.缴费 2.驳回）
      */
     private String status;
 
@@ -72,7 +72,7 @@ public class FinanceInfo implements Serializable {
     private String staffName;
 
     /**
-     * 所属校企
+     * 所属会员
      */
     private Integer enterpriseId;
 

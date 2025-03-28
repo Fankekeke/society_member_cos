@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * 校企信息管理 实现层
+ * 会员信息管理 实现层
  *
  * @author FanK
  */
@@ -30,10 +30,10 @@ import java.util.stream.Collectors;
 public class EnterpriseInfoServiceImpl extends ServiceImpl<EnterpriseInfoMapper, EnterpriseInfo> implements IEnterpriseInfoService {
 
     /**
-     * 分页获取校企信息信息
+     * 分页获取会员信息信息
      *
      * @param page           分页对象
-     * @param enterpriseInfo 校企信息信息
+     * @param enterpriseInfo 会员信息信息
      * @return 结果
      */
     @Override
@@ -42,7 +42,7 @@ public class EnterpriseInfoServiceImpl extends ServiceImpl<EnterpriseInfoMapper,
     }
 
     /**
-     * 导入校企信息列表
+     * 导入会员信息列表
      *
      * @param file 文件
      * @return 结果
@@ -86,7 +86,7 @@ public class EnterpriseInfoServiceImpl extends ServiceImpl<EnterpriseInfoMapper,
         excelReader.addHeaderAlias("单位简称或代号", "abbreviation");
         excelReader.addHeaderAlias("统一社会信用代码", "creditCode");
         excelReader.addHeaderAlias("单位性质", "nature");
-        excelReader.addHeaderAlias("二级校企单位性质", "natureTwo");
+        excelReader.addHeaderAlias("二级会员单位性质", "natureTwo");
         excelReader.addHeaderAlias("经营状态", "status");
         excelReader.addHeaderAlias("法定代表人", "corporateRepresentative");
         excelReader.addHeaderAlias("法定代表人身份证号", "corporateRepresentativeId");
@@ -101,7 +101,7 @@ public class EnterpriseInfoServiceImpl extends ServiceImpl<EnterpriseInfoMapper,
         excelReader.addHeaderAlias("省", "province");
         excelReader.addHeaderAlias("市", "city");
         excelReader.addHeaderAlias("区", "district");
-        excelReader.addHeaderAlias("英文校企名称", "enName");
+        excelReader.addHeaderAlias("英文会员名称", "enName");
         excelReader.addHeaderAlias("所属行业", "industry");
         excelReader.addHeaderAlias("单位简介", "unitDescription");
     }

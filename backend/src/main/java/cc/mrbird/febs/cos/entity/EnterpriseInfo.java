@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * 校企信息管理
+ * 会员信息管理
  *
  * @author FanK
  */
@@ -29,7 +29,7 @@ public class EnterpriseInfo implements Serializable {
     private Integer id;
 
     /**
-     * 校企名称
+     * 会员名称
      */
     private String name;
 
@@ -49,12 +49,12 @@ public class EnterpriseInfo implements Serializable {
     private String code;
 
     /**
-     * 单位性质(1:校企单位;2:事业单位;3:社会团体;4:军队单位;5:机关单位;6:其它单位;7:个体经营)
+     * 单位性质(1:会员单位;2:事业单位;3:社会团体;4:军队单位;5:机关单位;6:其它单位;7:个体经营)
      */
     private String nature;
 
     /**
-     * 二级校企单位性质
+     * 二级会员单位性质
      */
     private String natureTwo;
 
@@ -114,7 +114,7 @@ public class EnterpriseInfo implements Serializable {
     private String businessScope;
 
     /**
-     * 来源(1:自主注册、2:邀请注册、3:校企维护)
+     * 来源(1:自主注册、2:邀请注册、3:会员维护)
      */
     private String source;
 
@@ -134,7 +134,7 @@ public class EnterpriseInfo implements Serializable {
     private String district;
 
     /**
-     * 英文校企名称
+     * 英文会员名称
      */
     private String enName;
 

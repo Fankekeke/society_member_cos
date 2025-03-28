@@ -57,7 +57,7 @@ public class StaffInfoController {
     /**
      * 获取会员列表
      *
-     * @param enterpriseId 校企ID
+     * @param enterpriseId 会员ID
      * @return 结果
      */
     @GetMapping("/queryStaffList")
@@ -68,7 +68,7 @@ public class StaffInfoController {
     /**
      * 获取会员列表
      *
-     * @param staffId 校企ID
+     * @param staffId 会员ID
      * @return 结果
      */
     @GetMapping("/queryStaffList/staff")

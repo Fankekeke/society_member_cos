@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.AgentInfoMapper">
 
-    <!-- 分页获取代办任务 -->
+    <!-- 分页获取研究任务 -->
     <select id="queryAgentPage" resultType="java.util.LinkedHashMap">
         select
         ai.id,

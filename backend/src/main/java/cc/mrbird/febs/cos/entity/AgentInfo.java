@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 /**
- * 代办任务
+ * 研究任务
  *
  * @author FanK fan1ke2ke@gmail.com
  */
@@ -56,7 +56,7 @@ public class AgentInfo implements Serializable {
     private String complateDate;
 
     /**
-     * 所属校企
+     * 所属会员
      */
     private Integer enterpriseId;
 

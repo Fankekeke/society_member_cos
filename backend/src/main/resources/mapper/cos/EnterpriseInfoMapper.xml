@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cc.mrbird.febs.cos.dao.EnterpriseInfoMapper">
 
-    <!-- 分页获取校企信息信息 -->
+    <!-- 分页获取会员信息信息 -->
     <select id="selectEnterprisePage" resultType="java.util.LinkedHashMap">
         select
         id,

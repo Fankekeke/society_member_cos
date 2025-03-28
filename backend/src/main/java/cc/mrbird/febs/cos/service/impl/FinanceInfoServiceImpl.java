@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.LinkedHashMap;
 
 /**
- * 财务申请 实现层
+ * 会员缴费 实现层
  *
  * @author FanK fan1ke2ke@gmail.com
  */
@@ -20,10 +20,10 @@ import java.util.LinkedHashMap;
 public class FinanceInfoServiceImpl extends ServiceImpl<FinanceInfoMapper, FinanceInfo> implements IFinanceInfoService {
 
     /**
-     * 分页获取财务申请
+     * 分页获取会员缴费
      *
      * @param page        分页对象
-     * @param financeInfo 财务申请
+     * @param financeInfo 会员缴费
      * @return 结果
      */
     @Override
