@@ -11,46 +11,27 @@
     <a-form :form="form" layout="vertical">
       <a-row :gutter="20">
         <a-col :span="24">
-          <a-form-item label='规则内容' v-bind="formItemLayout">
+          <a-form-item label='等级名称' v-bind="formItemLayout">
             <a-input v-decorator="[
-            'remark',
-            { rules: [{ required: true, message: '请输入规则内容!' }] }
+            'levelName',
+            { rules: [{ required: true, message: '请输入等级名称!' }] }
             ]"/>
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='单价' v-bind="formItemLayout">
-            <a-input-number style="width: 100%;" v-decorator="[
-            'unitPrice',
-            { rules: [{ required: true, message: '请输入单价!' }] }
-            ]" :min="1" :step="1"/>
-          </a-form-item>
-        </a-col>
-        <a-col :span="24">
-          <a-form-item label='类型' v-bind="formItemLayout">
-            <a-select v-decorator="[
-              'type',
-              { rules: [{ required: true, message: '请输入类型!' }] }
-              ]">
-              <a-select-option value="1">重量</a-select-option>
-              <a-select-option value="2">距离</a-select-option>
-            </a-select>
-          </a-form-item>
-        </a-col>
-        <a-col :span="24">
-          <a-form-item label='最小值' v-bind="formItemLayout">
+          <a-form-item label='最低打卡天数' v-bind="formItemLayout">
             <a-input-number style="width: 100%" v-decorator="[
-                              'minValue',
-                              { rules: [{ required: true, message: '请输入最小值!' }] }
-                              ]" :min="0" :step="0.1"/>
+                              'checkDayMin',
+                              { rules: [{ required: true, message: '请输入最低打卡天数!' }] }
+                              ]" :min="0" :step="1"/>
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='最大值' v-bind="formItemLayout">
+          <a-form-item label='最高打卡天数' v-bind="formItemLayout">
             <a-input-number style="width: 100%" v-decorator="[
-                              'maxValue',
-                              { rules: [{ required: true, message: '请输入最小值!' }] }
-                              ]" :min="0" :step="0.1"/>
+                              'checkDayMax',
+                              { rules: [{ required: true, message: '请输入最高打卡天数!' }] }
+                              ]" :min="0" :step="1"/>
           </a-form-item>
         </a-col>
       </a-row>
@@ -127,7 +108,7 @@ export default {
     },
     setFormValues ({...rules}) {
       this.rowId = rules.id
-      let fields = ['remark', 'unitPrice', 'type', 'minValue', 'maxValue']
+      let fields = ['levelName', 'checkDayMin', 'checkDayMax']
       let obj = {}
       Object.keys(rules).forEach((key) => {
         if (fields.indexOf(key) !== -1) {

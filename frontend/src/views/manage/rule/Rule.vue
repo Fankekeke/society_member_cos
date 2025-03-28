@@ -15,10 +15,10 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="规则内容"
+                label="规则名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
-                <a-input v-model="queryParams.remark"/>
+                <a-input v-model="queryParams.levelName"/>
               </a-form-item>
             </a-col>
           </div>
@@ -134,12 +134,12 @@ export default {
         dataIndex: 'code',
         ellipsis: true
       }, {
-        title: '规则内容',
-        dataIndex: 'remark',
+        title: '规则名称',
+        dataIndex: 'levelName',
         ellipsis: true
       }, {
-        title: '最小值',
-        dataIndex: 'minValue',
+        title: '最低打卡天数',
+        dataIndex: 'checkDayMin',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -149,8 +149,8 @@ export default {
         },
         ellipsis: true
       }, {
-        title: '最大值',
-        dataIndex: 'maxValue',
+        title: '最高打卡天数',
+        dataIndex: 'checkDayMax',
         customRender: (text, row, index) => {
           if (text !== null) {
             return text
@@ -195,7 +195,7 @@ export default {
     },
     handlerulesAddSuccess () {
       this.rulesAdd.visiable = false
-      this.$message.success('新增价格规则成功')
+      this.$message.success('新增等级规则成功')
       this.search()
     },
     edit (record) {
@@ -207,7 +207,7 @@ export default {
     },
     handlerulesEditSuccess () {
       this.rulesEdit.visiable = false
-      this.$message.success('修改价格规则成功')
+      this.$message.success('修改等级规则成功')
       this.search()
     },
     handleDeptChange (value) {
