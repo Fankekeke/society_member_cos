@@ -46,17 +46,17 @@ public class ConferenceInfoController {
     }
 
     /**
-     * 根据条件查询员工
+     * 根据条件查询会员
      *
      * @param conditionId 会议ID
      * @return 结果
      */
     @GetMapping("/queryStaffListByCondition")
     public R queryStaffListByCondition(Integer conditionId) {
-        // 获取会议员工列表
+        // 获取会议会员列表
         ConferenceInfo conferenceInfo = conferenceInfoService.getById(conditionId);
         if (conferenceInfo != null) {
-            // 获取员工列表
+            // 获取会员列表
             List<LinkedHashMap<String, Object>> staffInfoList = staffInfoService.selectStaffListByUserIds(Arrays.asList(conferenceInfo.getStaffIds().split(",")));
             return R.ok(staffInfoList);
         } else {
@@ -96,7 +96,7 @@ public class ConferenceInfoController {
         StaffInfo staffInfo = staffInfoService.getOne(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getUserId, conferenceInfo.getStaffId()));
         if (staffInfo != null) {
             conferenceInfo.setStaffId(staffInfo.getId());
-            // 获取员工所属公司
+            // 获取会员所属公司
             conferenceInfo.setEnterpriseId(staffInfo.getEnterpriseId());
         }
         List<String> staffIds = Arrays.asList(conferenceInfo.getStaffIds().split(","));

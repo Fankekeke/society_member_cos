@@ -7,7 +7,7 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="员工名称"
+                label="会员名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.staffName"/>
@@ -114,7 +114,7 @@ export default {
         ellipsis: true,
         dataIndex: 'staffName'
       }, {
-        title: '员工头像',
+        title: '会员头像',
         dataIndex: 'staffImages',
         customRender: (text, record, index) => {
           if (!record.staffImages) return <a-avatar shape="square" icon="user" />

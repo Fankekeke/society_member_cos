@@ -30,10 +30,10 @@
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='指派员工' v-bind="formItemLayout">
+          <a-form-item label='指派会员' v-bind="formItemLayout">
             <a-select style="width: 100%" v-decorator="[
             'staffId',
-            { rules: [{ required: true, message: '请输入指派员工!' }] }
+            { rules: [{ required: true, message: '请输入指派会员!' }] }
             ]" option-label-prop="label">
               <a-select-option v-for="(item, index) in staffList" :key="index" :value="item.id" :label="item.name">
                 <a-row>

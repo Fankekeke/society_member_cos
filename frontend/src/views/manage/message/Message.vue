@@ -7,7 +7,7 @@
           <div :class="advanced ? null: 'fold'">
 <!--            <a-col :md="6" :sm="24">-->
 <!--              <a-form-item-->
-<!--                label="员工名称"-->
+<!--                label="会员名称"-->
 <!--                :labelCol="{span: 5}"-->
 <!--                :wrapperCol="{span: 18, offset: 1}">-->
 <!--                <a-input v-model="queryParams.expertName"/>-->
@@ -15,7 +15,7 @@
 <!--            </a-col>-->
 <!--             <a-col :md="6" :sm="24">-->
 <!--              <a-form-item-->
-<!--                label="员工名称"-->
+<!--                label="会员名称"-->
 <!--                :labelCol="{span: 5}"-->
 <!--                :wrapperCol="{span: 18, offset: 1}">-->
 <!--                <a-input v-model="queryParams.enterpriseName"/>-->
@@ -111,13 +111,13 @@ export default {
     }),
     columns () {
       return [{
-        title: '员工名称',
+        title: '会员名称',
         dataIndex: 'sendUserName'
       }, {
-        title: '员工名称',
+        title: '会员名称',
         dataIndex: 'takeUserName'
       }, {
-        title: '员工头像',
+        title: '会员头像',
         dataIndex: 'sendUserAvatar',
         customRender: (text, record, index) => {
           if (!record.sendUserAvatar) return <a-avatar shape="square" icon="user" />
@@ -129,7 +129,7 @@ export default {
           </a-popover>
         }
       }, {
-        title: '员工头像',
+        title: '会员头像',
         dataIndex: 'takeUserAvatar',
         customRender: (text, record, index) => {
           if (!record.takeUserAvatar) return <a-avatar shape="square" icon="user" />

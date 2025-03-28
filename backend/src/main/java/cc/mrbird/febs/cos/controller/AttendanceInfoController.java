@@ -50,7 +50,7 @@ public class AttendanceInfoController {
 
     /**
      * 查询当天打卡状态
-     * @param userId 员工ID
+     * @param userId 会员ID
      * @return 结果
      */
     @GetMapping("/queryTodayCheck")
@@ -70,9 +70,9 @@ public class AttendanceInfoController {
     }
 
     /**
-     * 根据员工ID查询考勤打卡
+     * 根据会员ID查询考勤打卡
      *
-     * @param staffId 员工ID
+     * @param staffId 会员ID
      * @return 结果
      */
     @GetMapping("/queryAttendanceByStaff")
@@ -98,7 +98,7 @@ public class AttendanceInfoController {
      */
     @PostMapping
     public R save(AttendanceInfo attendanceInfo) {
-        // 获取员工信息
+        // 获取会员信息
         StaffInfo staffInfo = staffInfoService.getOne(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getUserId, attendanceInfo.getStaffId()));
         if (staffInfo != null) {
             attendanceInfo.setStaffId(staffInfo.getId());
@@ -113,7 +113,7 @@ public class AttendanceInfoController {
     /**
      * 获取当天打卡状态
      *
-     * @param staffId 员工ID
+     * @param staffId 会员ID
      * @return 结果
      */
     @GetMapping("/checkWorkByToday")
@@ -129,7 +129,7 @@ public class AttendanceInfoController {
      */
     @GetMapping("/queryAttendanceRecordByUserId")
     public R queryAttendanceRecordByUserId(Integer userId) {
-        // 获取员工信息
+        // 获取会员信息
         StaffInfo staffInfo = staffInfoService.getOne(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getUserId, userId));
         if (staffInfo != null) {
             return R.ok(attendanceInfoService.list(Wrappers.<AttendanceInfo>lambdaQuery().eq(AttendanceInfo::getStaffId, staffInfo.getId())));

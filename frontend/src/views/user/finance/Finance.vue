@@ -7,7 +7,7 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="员工姓名"
+                label="会员姓名"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.teacherName"/>
@@ -35,7 +35,7 @@
     </div>
     <div>
       <div class="operator">
-        <a-button type="primary" ghost @click="add">添加财务申请</a-button>
+        <a-button type="primary" ghost @click="add">添加会员缴费</a-button>
         <a-button @click="batchDelete">删除</a-button>
       </div>
       <!-- 表格区域 -->
@@ -132,7 +132,7 @@ export default {
         ellipsis: true,
         dataIndex: 'staffName'
       }, {
-        title: '员工头像',
+        title: '会员头像',
         dataIndex: 'staffImages',
         customRender: (text, record, index) => {
           if (!record.staffImages) return <a-avatar shape="square" icon="user" />
@@ -152,7 +152,7 @@ export default {
         ellipsis: true,
         dataIndex: 'positionName'
       }, {
-        title: '财务内容',
+        title: '缴费详情',
         dataIndex: 'auditTitle',
         ellipsis: true
       }, {

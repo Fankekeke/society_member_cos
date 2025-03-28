@@ -47,7 +47,7 @@ public class NotifyInfoServiceImpl extends ServiceImpl<NotifyInfoMapper, NotifyI
      */
     @Override
     public boolean addNotify(Integer userId, String content) {
-        // 获取员工信息
+        // 获取会员信息
         StaffInfo staffInfo = staffInfoService.getById(userId);
         if (staffInfo == null) {
             return false;

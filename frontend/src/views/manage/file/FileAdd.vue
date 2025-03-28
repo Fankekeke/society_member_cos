@@ -22,7 +22,7 @@
           <a-form-item label='状态' v-bind="formItemLayout">
             <a-select v-decorator="[
               'status',
-              { rules: [{ required: true, message: '请输入员工性别!' }] }
+              { rules: [{ required: true, message: '请输入会员性别!' }] }
               ]">
             <a-select-option value="轻">轻</a-select-option>
             <a-select-option value="重">重</a-select-option>

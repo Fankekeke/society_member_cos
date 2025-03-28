@@ -32,10 +32,10 @@ public class StaffInfoController {
     private final UserService userService;
 
     /**
-     * 分页获取员工信息
+     * 分页获取会员信息
      *
      * @param page          分页对象
-     * @param staffInfo 员工信息
+     * @param staffInfo 会员信息
      * @return 结果
      */
     @GetMapping("/page")
@@ -55,7 +55,7 @@ public class StaffInfoController {
     }
 
     /**
-     * 获取员工列表
+     * 获取会员列表
      *
      * @param enterpriseId 校企ID
      * @return 结果
@@ -66,7 +66,7 @@ public class StaffInfoController {
     }
 
     /**
-     * 获取员工列表
+     * 获取会员列表
      *
      * @param staffId 校企ID
      * @return 结果
@@ -78,7 +78,7 @@ public class StaffInfoController {
     }
 
     /**
-     * 获取员工信息
+     * 获取会员信息
      *
      * @return 结果
      */
@@ -88,17 +88,17 @@ public class StaffInfoController {
     }
 
     /**
-     * 获取员工信息
+     * 获取会员信息
      *
      * @return 结果
      */
     @GetMapping("/list")
     public R list() {
-        return R.ok(staffInfoService.list(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getDelFlag, 0)));
+        return R.ok(staffInfoService.selectStaffList(null));
     }
 
     /**
-     * 获取员工详细信息
+     * 获取会员详细信息
      *
      * @param id ID
      * @return 结果
@@ -109,9 +109,9 @@ public class StaffInfoController {
     }
 
     /**
-     * 新增员工信息
+     * 新增会员信息
      *
-     * @param staffInfo 员工信息
+     * @param staffInfo 会员信息
      * @return 结果
      */
     @PostMapping
@@ -128,9 +128,9 @@ public class StaffInfoController {
     }
 
     /**
-     * 修改员工信息
+     * 修改会员信息
      *
-     * @param staffInfo 员工信息
+     * @param staffInfo 会员信息
      * @return 结果
      */
     @PutMapping
@@ -139,7 +139,7 @@ public class StaffInfoController {
     }
 
     /**
-     * 删除员工信息
+     * 删除会员信息
      *
      * @param ids 主键IDS
      * @return 结果

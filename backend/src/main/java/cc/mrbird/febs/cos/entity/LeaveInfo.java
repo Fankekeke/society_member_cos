@@ -29,7 +29,7 @@ public class LeaveInfo implements Serializable {
     private Integer id;
 
     /**
-     * 员工ID
+     * 会员ID
      */
     private Integer staffId;
 

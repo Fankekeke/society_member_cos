@@ -70,7 +70,7 @@ public class AgentInfoServiceImpl extends ServiceImpl<AgentInfoMapper, AgentInfo
 
         // 返回数据
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-        // 查询员工信息
+        // 查询会员信息
         Integer staffNum = staffInfoMapper.selectCount(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getDelFlag, "0"));
 
         // 总任务数量

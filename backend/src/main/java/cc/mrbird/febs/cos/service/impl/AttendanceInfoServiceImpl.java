@@ -57,9 +57,9 @@ public class AttendanceInfoServiceImpl extends ServiceImpl<AttendanceInfoMapper,
     }
 
     /**
-     * 根据员工ID查询考勤打卡
+     * 根据会员ID查询考勤打卡
      *
-     * @param staffId 员工ID
+     * @param staffId 会员ID
      * @return 结果
      */
     @Override
@@ -113,7 +113,7 @@ public class AttendanceInfoServiceImpl extends ServiceImpl<AttendanceInfoMapper,
     /**
      * 获取当天打卡状态
      *
-     * @param staffId 员工ID
+     * @param staffId 会员ID
      * @return 结果
      */
     @Override

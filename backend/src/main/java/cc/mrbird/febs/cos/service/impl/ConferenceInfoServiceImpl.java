@@ -59,7 +59,7 @@ public class ConferenceInfoServiceImpl extends ServiceImpl<ConferenceInfoMapper,
                 put("staffList", Collections.emptyList());
             }
         };
-        // 获取参加会议员工
+        // 获取参加会议会员
         if (StrUtil.isNotEmpty(conferenceInfo.getStaffIds())) {
             List<String> staffIds = StrUtil.split(conferenceInfo.getStaffIds(), ",");
             List<StaffInfo> staffInfoList = new ArrayList<>(staffInfoService.listByIds(staffIds));

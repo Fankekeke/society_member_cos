@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="新增财务申请" @cancel="onClose" :width="550">
+  <a-modal v-model="show" title="新增会员缴费" @cancel="onClose" :width="550">
     <template slot="footer">
       <a-button key="back" @click="onClose">
         取消
@@ -19,10 +19,10 @@
           </a-form-item>
         </a-col>
         <a-col :span="24">
-          <a-form-item label='申请内容' v-bind="formItemLayout">
+          <a-form-item label='缴费详情' v-bind="formItemLayout">
             <a-textarea :rows="6" v-decorator="[
             'auditTitle',
-             { rules: [{ required: true, message: '请输入申请内容!' }] }
+             { rules: [{ required: true, message: '请输入缴费详情!' }] }
             ]"/>
           </a-form-item>
         </a-col>
