@@ -91,6 +91,12 @@ public class AgentInfoServiceImpl extends ServiceImpl<AgentInfoMapper, AgentInfo
         List<LinkedHashMap<String, Object>> orderNumDays = baseMapper.selectOrderNumDays(enterpriseId);
         // 近十天内任务完成统计
         List<LinkedHashMap<String, Object>> orderAmountDays = baseMapper.selectOrderAmountDays(enterpriseId);
+
+        // 近十天内缴费单数量统计
+        List<LinkedHashMap<String, Object>> payNumDays = baseMapper.selectOrderNumDays(enterpriseId);
+        // 近十天内缴费金额统计
+        List<LinkedHashMap<String, Object>> payAmountDays = baseMapper.selectOrderAmountDays(enterpriseId);
+
         // 公告
         List<BulletinInfo> bulletinInfoList = bulletinInfoService.list();
         result.put("orderNumMonth", orderNumMonth);

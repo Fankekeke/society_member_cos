@@ -13,6 +13,7 @@ import cc.mrbird.febs.cos.service.ITicketOptionInfoService;
 import cc.mrbird.febs.cos.service.ITicketRecordService;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -95,16 +97,25 @@ public class TicketInfoController {
     @PostMapping
     @Transactional(rollbackFor = Exception.class)
     public R save(TicketInfo ticketInfo) throws FebsException {
+        if (StrUtil.isEmpty(ticketInfo.getOptionStr())) {
+            throw new FebsException("投票选项不能为空");
+        }
         ticketInfo.setCode("TC-" + System.currentTimeMillis());
         ticketInfo.setCreateDate(DateUtil.formatDateTime(new Date()));
         // 添加投票选项
-        List<TicketOptionInfo> ticketOptionInfoList = JSONUtil.toList(ticketInfo.getOptionStr(), TicketOptionInfo.class);
-        if (CollectionUtil.isEmpty(ticketOptionInfoList)) {
+        List<String> optionList = StrUtil.split(ticketInfo.getOptionStr(), "-");
+        if (CollectionUtil.isEmpty(optionList)) {
             throw new FebsException("投票选项不能为空");
         }
         ticketInfoService.save(ticketInfo);
-        for (TicketOptionInfo ticketOptionInfo : ticketOptionInfoList) {
+        // 待添加的投票选项
+        List<TicketOptionInfo> ticketOptionInfoList = new ArrayList<>();
+        for (String ticketOption : optionList) {
+            TicketOptionInfo ticketOptionInfo = new TicketOptionInfo();
             ticketOptionInfo.setTicketId(ticketInfo.getId());
+            ticketOptionInfo.setContent(ticketOption);
+            ticketOptionInfo.setName(ticketOption);
+            ticketOptionInfoList.add(ticketOptionInfo);
         }
         return R.ok(ticketOptionInfoService.saveBatch(ticketOptionInfoList));
     }

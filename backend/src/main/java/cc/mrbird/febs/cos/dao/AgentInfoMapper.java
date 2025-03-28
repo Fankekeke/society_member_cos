@@ -52,4 +52,18 @@ public interface AgentInfoMapper extends BaseMapper<AgentInfo> {
      * @return 结果
      */
     List<LinkedHashMap<String, Object>> selectOrderAmountDays(@Param("enterpriseId") Integer enterpriseId);
+
+    /**
+     * 近十天内缴费数量统计
+     *
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectPayNumDays(@Param("enterpriseId") Integer enterpriseId);
+
+    /**
+     * 近十天内缴费金额统计
+     *
+     * @return 结果
+     */
+    List<LinkedHashMap<String, Object>> selectPayAmountDays(@Param("enterpriseId") Integer enterpriseId);
 }
