@@ -1,6 +1,7 @@
 package cc.mrbird.febs.cos.controller;
 
 
+import cc.mrbird.febs.common.exception.FebsException;
 import cc.mrbird.febs.common.utils.R;
 import cc.mrbird.febs.cos.entity.ExerciseAuditInfo;
 import cc.mrbird.febs.cos.entity.StaffInfo;
@@ -74,12 +75,21 @@ public class ExerciseAuditInfoController {
      * @return 结果
      */
     @PostMapping
-    public R save(ExerciseAuditInfo exerciseAuditInfo) {
+    public R save(ExerciseAuditInfo exerciseAuditInfo) throws FebsException {
         // 获取用户信息
         StaffInfo staffInfo = staffInfoService.getOne(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getUserId, exerciseAuditInfo.getUserId()));
         if (staffInfo == null) {
-            return R.error("用户信息不存在");
+            throw new FebsException("用户信息不存在");
         }
+
+        // 校验用户是否已经预约或者正在审核中
+        int count = exerciseAuditInfoService.count(Wrappers.<ExerciseAuditInfo>lambdaQuery()
+                .eq(ExerciseAuditInfo::getUserId, staffInfo.getId())
+                .ne(ExerciseAuditInfo::getStatus, "2"));
+        if (count > 0) {
+            throw new FebsException("您已经预约或者正在审核中，请勿重复预约！");
+        }
+
         exerciseAuditInfo.setUserId(staffInfo.getId());
         exerciseAuditInfo.setStatus("0");
         exerciseAuditInfo.setCreateDate(DateUtil.formatDateTime(new Date()));

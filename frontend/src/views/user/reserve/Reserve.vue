@@ -215,10 +215,6 @@ export default {
           }
         },
         ellipsis: true
-      }, {
-        title: '操作',
-        dataIndex: 'operation',
-        scopedSlots: {customRender: 'operation'}
       }]
     }
   },
@@ -340,7 +336,7 @@ export default {
         params.size = this.pagination.defaultPageSize
         params.current = this.pagination.defaultCurrent
       }
-      params.enterpriseId = this.currentUser.userId
+      params.staffId = this.currentUser.userId
       this.$get('/cos/exercise-audit-info/page', {
         ...params
       }).then((r) => {

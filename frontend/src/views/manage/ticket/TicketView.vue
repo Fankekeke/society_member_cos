@@ -35,7 +35,7 @@
         </a-col>
       </a-row>
       <br/>
-      <a-row style="margin-top: 15px" :gutter="25">
+      <a-row style="margin-top: 15px;padding-left: 24px;padding-right: 24px;" :gutter="25">
         <a-col :span="24">
           <div hoverable :bordered="false" style="width: 100%">
             <a-skeleton active v-if="chartLoading" />

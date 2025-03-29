@@ -35,6 +35,9 @@
         <if test="ticketRecord.staffName != null and ticketRecord.staffName != ''">
             AND si.name LIKE CONCAT('%',#{ticketRecord.staffName},'%')
         </if>
+        <if test="ticketRecord.staffId != null and ticketRecord.staffId != ''">
+            AND si.user_id = #{ticketRecord.staffId}
+        </if>
         order by tr.create_date desc
     </select>
 </mapper>

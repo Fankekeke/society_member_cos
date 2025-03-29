@@ -130,7 +130,7 @@ gisMap.polygonWindon = (polygon,polygonInfo,point) => {
     '            <td>'+(polygonInfo.$alarmRule == null ? '暂无信息' : polygonInfo.$alarmRule)+'</td>\n' +
     '        </tr>\n' +
     '        <tr>\n' +
-    '            <td>所属部门</td>\n' +
+    '            <td>所属小组</td>\n' +
     '            <td>'+polygonInfo.$deptId+'</td>\n' +
     '        </tr>\n' +
     '        <tr>\n' +
@@ -172,7 +172,7 @@ gisMap.polylineWindon = (polyline,polylineInfo,point) => {
     '            <td>'+(polylineInfo.rodeLevel == null ? '暂无信息' : polylineInfo.rodeLevel)+'</td>\n' +
     '        </tr>\n' +
     '        <tr>\n' +
-    '            <td>所属部门</td>\n' +
+    '            <td>所属小组</td>\n' +
     '            <td>'+polylineInfo.$deptId+'</td>\n' +
     '        </tr>\n' +
     '        <tr>\n' +
@@ -215,7 +215,7 @@ gisMap.trashWindon = (trashMarker,trashInfo,point) => {
   }
   let info = '<div style="margin:0;line-height:20px;padding:2px;width: 700px;height: 270px">' +
     '<div style="float: left;width: 100%"><img src="http://img5.imgtn.bdimg.com/it/u=503688232,1988133337&fm=26&gp=0.jpg" alt="" style="float:left;zoom:1;overflow:hidden;width:100px;height:100px;margin-right:30px;"/>' +
-    '<ul style="float: left;width: 150px"><li>所属部门：'+trashInfo.$deptId+'m</li><li>位置：'+trashInfo.trashAddress+'/km</li><li>经度：'+point.lng+'</li><li>纬度：'+point.lat+'</li></ul>'+
+    '<ul style="float: left;width: 150px"><li>所属小组：'+trashInfo.$deptId+'m</li><li>位置：'+trashInfo.trashAddress+'/km</li><li>经度：'+point.lng+'</li><li>纬度：'+point.lat+'</li></ul>'+
     '<ul style="float: left;width: 200px"><li>备注：'+trashInfo.trashMemo+'</li></ul>'+
     '</div>'+
     '<h4 style="margin-top: 5px">连线互动</h4><ul style="margin-top: 10px;margin-left: 30px;">' +

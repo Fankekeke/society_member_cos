@@ -57,4 +57,7 @@ public class ExchangeInfo implements Serializable {
 
     @TableField(exist = false)
     private String materialName;
+
+    @TableField(exist = false)
+    private Integer staffId;
 }

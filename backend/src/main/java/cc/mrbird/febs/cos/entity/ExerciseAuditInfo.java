@@ -61,5 +61,8 @@ public class ExerciseAuditInfo implements Serializable {
     @TableField(exist = false)
     private String exerciseName;
 
+    @TableField(exist = false)
+    private Integer staffId;
+
 
 }

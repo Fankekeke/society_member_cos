@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="show" title="新增部门" @cancel="onClose" :width="600">
+  <a-modal v-model="show" title="新增小组" @cancel="onClose" :width="600">
     <template slot="footer">
       <a-button key="back" @click="onClose">
         取消
@@ -11,7 +11,7 @@
     <a-form :form="form" layout="vertical">
       <a-row :gutter="20">
         <a-col :span="12">
-          <a-form-item label='部门名称' v-bind="formItemLayout">
+          <a-form-item label='小组名称' v-bind="formItemLayout">
             <a-input v-decorator="[
             'deptName',
             { rules: [{ required: true, message: '请输入名称!' }] }

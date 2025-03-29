@@ -204,7 +204,7 @@ baiduMap.infoWindow = (marker, content) => {
   let info = '<div style="margin:0;line-height:20px;padding:2px;width: 700px;height: 270px">' +
     '<div style="float: left;width: 100%"><img src="http://file2.5ihw.cn:9033/comm/image/biz/5af3f480c1cb6173dc6b0195/0.1f" alt="" style="float:left;zoom:1;overflow:hidden;width:100px;height:100px;margin-right:30px;"/>' +
     '<ul style="float: left;width: 150px"><li>高度：' + content.altitude + 'm</li><li>速度：' + content.speed + '/km</li><li>经度：' + content.longitude + '</li><li>纬度：' + content.latitude + '</li></ul>' +
-    '<ul style="float: left;width: 200px"><li>所属部门：' + content.dept_name + '</li><li>燃油类型：' + fuleName + '</li><li>运营状态：' + operationName + '</li><li>工作状态：' + content.work_state + '</li></ul>' +
+    '<ul style="float: left;width: 200px"><li>所属小组：' + content.dept_name + '</li><li>燃油类型：' + fuleName + '</li><li>运营状态：' + operationName + '</li><li>工作状态：' + content.work_state + '</li></ul>' +
     '<ul style="float: left;width: 180px"><li>车辆内部编号：' + content.intenal_no + '</li><li>信号强度：' + signal + '</li><li>报警状态：' + content.alarm_state + '</li></ul>' +
     '</div>' +
     '<h4>连线互动</h4><ul style="margin-top: 10px;margin-left: 30px;">' +
@@ -229,7 +229,7 @@ baiduMap.stationInfoWindow = (marker, content) => {
     '<div style="float: left;width: 100%"><img src="http://file2.5ihw.cn:9033/comm/image/biz/5af3f480c1cb6173dc6b0195/0.1f" alt="" style="float:left;zoom:1;overflow:hidden;width:100px;height:100px;margin-right:30px;"/>' +
     '<ul style="float: left;width: 150px"><li>编号：' + content.stationCode + 'm</li><li>名称：' + content.stationName + '/km</li><li>经度：</li><li>纬度：</li></ul>' +
     '<ul style="float: left;width: 200px"><li>站点类型：' + content.stationType + '</li><li>位置：' + content.stationAddress + '</li><li>月清运次数：' + content.clearTimesMonth + '</li><li>日清运次数：' + content.clearTimesDay + '</li></ul>' +
-    '<ul style="float: left;width: 180px"><li>所属区域：' + content.belongArea + '</li><li>服务范围：' + content.serviceScope + '</li><li>所属部门：' + content.dept_name + '</li></ul>' +
+    '<ul style="float: left;width: 180px"><li>所属区域：' + content.belongArea + '</li><li>服务范围：' + content.serviceScope + '</li><li>所属小组：' + content.dept_name + '</li></ul>' +
     '</div>' +
     '<h4>连线互动</h4><ul style="margin-top: 10px;margin-left: 30px;">' +
     '<li style="display: inline-block;width: 100px"><a href="testOpen()"><img style="width:16px;height:16px;vertical-align:middle;margin-right: 2px" src="http://210.14.146.39:8080/platform/image/ico/messaging.png">下发短信</a></li>' +
@@ -312,7 +312,7 @@ baiduMap.infoWindowSize = (vehicleNo, content) => {
   let info = '<div style="margin:0;line-height:20px;padding:2px;">' +
     '<div style="float: left;width: 100%"><img src="http://182.92.64.172/cy.png" alt="" style="float:left;zoom:1;overflow:hidden;width:100px;height:100px;margin-right:30px;"/>' +
     '<ul style="float: left;width: 130px"><li>高度：' + content.altitude + 'm</li><li>速度：' + content.speed + '/km</li><li>经度：' + content.longitude + '</li><li>纬度：' + content.latitude + '</li></ul>' +
-    '<ul style="float: left;width: 150px"><li>所属部门：' + content.dept_name + '</li><li>燃油类型：' + fuleName + '</li><li>运营状态：' + operationName + '</li><li>工作状态：' + content.work_state + '</li></ul>' +
+    '<ul style="float: left;width: 150px"><li>所属小组：' + content.dept_name + '</li><li>燃油类型：' + fuleName + '</li><li>运营状态：' + operationName + '</li><li>工作状态：' + content.work_state + '</li></ul>' +
     '<ul style="float: left;width: 150px"><li>车辆内部编号：' + content.intenal_no + '</li><li>信号强度：' + signal + '</li><li>报警状态：' + content.alarm_state + '</li></ul>' +
     '</div>' +
     '<h4>连线互动</h4><ul style="margin-top: 10px;margin-left: 30px;">' +

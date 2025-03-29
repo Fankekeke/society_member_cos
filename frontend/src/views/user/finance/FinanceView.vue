@@ -14,7 +14,7 @@
         <a-col :span="8"><b>会员姓名：</b>
           {{ memberData.staffName ? memberData.staffName : '- -' }}
         </a-col>
-        <a-col :span="8"><b>所属部门：</b>
+        <a-col :span="8"><b>所属小组：</b>
           {{ memberData.deptName }}
         </a-col>
       </a-row>

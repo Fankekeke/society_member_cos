@@ -189,7 +189,7 @@
 
     <select id="selectPayAmountDays" resultType="java.util.LinkedHashMap">
         SELECT DATE_FORMAT(spo.days, '%m-%d') AS days,
-        IFNULL(COUNT(oi.id), 0) AS count
+        IFNULL(sum(oi.total_price), 0) AS count
         FROM
         (
         SELECT

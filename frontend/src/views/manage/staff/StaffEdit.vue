@@ -92,20 +92,20 @@
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='所属部门' v-bind="formItemLayout">
+          <a-form-item label='所属小组' v-bind="formItemLayout">
             <a-select v-decorator="[
               'deptId',
-              { rules: [{ required: true, message: '请输入所属部门!' }] }
+              { rules: [{ required: true, message: '请输入所属小组!' }] }
               ]">
               <a-select-option :value="item.id" v-for="(item, index) in deptList" :key="index">{{ item.deptName }}</a-select-option>
             </a-select>
           </a-form-item>
         </a-col>
         <a-col :span="12">
-          <a-form-item label='所属岗位' v-bind="formItemLayout">
+          <a-form-item label='所属职位' v-bind="formItemLayout">
             <a-select v-decorator="[
               'positionId',
-              { rules: [{ required: true, message: '请输入所属岗位!' }] }
+              { rules: [{ required: true, message: '请输入所属职位!' }] }
               ]">
               <a-select-option :value="item.id" v-for="(item, index) in positionList" :key="index">{{ item.name }}</a-select-option>
             </a-select>

@@ -68,6 +68,7 @@
         </template>
         <template slot="operation" slot-scope="text, record">
 <!--          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>-->
+          <a-icon type="bell" theme="twoTone" twoToneColor="#4a9ff5" @click="reserveAdd(record)" title="预 约"></a-icon>
           <a-icon type="file-search" @click="venueViewOpen(record)" title="详 情" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
@@ -214,6 +215,15 @@ export default {
     this.fetch()
   },
   methods: {
+    reserveAdd (row) {
+      this.$post('/cos/exercise-audit-info', {
+        userId: this.currentUser.userId,
+        exerciseId: row.id
+      }).then((r) => {
+        this.$message.success('预约活动成功，请等待审核')
+        this.search()
+      })
+    },
     venueViewOpen (row) {
       this.venueView.data = row
       this.venueView.visiable = true

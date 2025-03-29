@@ -15,7 +15,7 @@
             </a-col>
             <a-col :md="12" :sm="24" >
               <a-form-item
-                label="部门"
+                label="小组"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <dept-input-tree @change="handleDeptChange"
@@ -185,7 +185,7 @@ export default {
         scopedSlots: { customRender: 'email' },
         width: 100
       }, {
-        title: '部门',
+        title: '小组',
         dataIndex: 'deptName'
       }, {
         title: '电话',
@@ -373,7 +373,7 @@ export default {
       this.sortedInfo = null
       // 重置查询参数
       this.queryParams = {}
-      // 清空部门树选择
+      // 清空小组树选择
       this.$refs.deptTree.reset()
       // 清空时间选择
       if (this.advanced) {

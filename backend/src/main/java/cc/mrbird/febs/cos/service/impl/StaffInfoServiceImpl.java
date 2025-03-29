@@ -1,13 +1,11 @@
 package cc.mrbird.febs.cos.service.impl;
 
 import cc.mrbird.febs.cos.dao.AgentInfoMapper;
-import cc.mrbird.febs.cos.entity.AgentInfo;
-import cc.mrbird.febs.cos.entity.BulletinInfo;
-import cc.mrbird.febs.cos.entity.StaffInfo;
+import cc.mrbird.febs.cos.entity.*;
 import cc.mrbird.febs.cos.dao.StaffInfoMapper;
-import cc.mrbird.febs.cos.entity.UserInfo;
 import cc.mrbird.febs.cos.service.IAgentInfoService;
 import cc.mrbird.febs.cos.service.IBulletinInfoService;
+import cc.mrbird.febs.cos.service.ILevelRuleInfoService;
 import cc.mrbird.febs.cos.service.IStaffInfoService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -34,6 +32,7 @@ public class StaffInfoServiceImpl extends ServiceImpl<StaffInfoMapper, StaffInfo
 
     private final IBulletinInfoService bulletinInfoService;
 
+    private final ILevelRuleInfoService levelRuleInfoService;
     /**
      * 分页获取会员信息
      *
@@ -105,6 +104,10 @@ public class StaffInfoServiceImpl extends ServiceImpl<StaffInfoMapper, StaffInfo
     public LinkedHashMap<String, Object> queryStaffByUserId(Integer userId) {
         // 获取会员信息
         StaffInfo staffInfo = staffInfoService.selectOne(Wrappers.<StaffInfo>lambdaQuery().eq(StaffInfo::getUserId, userId));
+        if (staffInfo.getMemberLevel() != null) {
+            LevelRuleInfo levelRuleInfo = levelRuleInfoService.getById(staffInfo.getMemberLevel());
+            staffInfo.setLevelName(levelRuleInfo.getLevelName());
+        }
         // 返回数据
         LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>() {
             {

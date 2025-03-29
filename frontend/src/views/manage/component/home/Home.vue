@@ -91,6 +91,20 @@
         </a-card>
       </a-col>
     </a-row>
+    <a-row style="margin-top: 15px" v-if="user.roleId == 74 || user.roleId == 76" :gutter="25">
+      <a-col :span="12">
+        <div style="width: 100%">
+          <a-skeleton active v-if="loading" />
+          <apexchart  v-if="!loading" type="line" height="300" :options="chartOptions11" :series="series11"></apexchart>
+        </div>
+      </a-col>
+      <a-col :span="12">
+        <div hoverable :bordered="false" style="width: 100%">
+          <a-skeleton active v-if="loading" />
+          <apexchart v-if="!loading" type="bar" height="300" :options="chartOptions10" :series="series10"></apexchart>
+        </div>
+      </a-col>
+    </a-row>
   </div>
 </template>
 
@@ -124,6 +138,80 @@ export default {
         yearPutPrice: 0
       },
       loading: false,
+      series11: [{
+        name: '订单量',
+        data: []
+      }],
+      chartOptions11: {
+        chart: {
+          type: 'line',
+          height: 300
+        },
+        xaxis: {
+          categories: []
+        },
+        stroke: {
+          curve: 'stepline'
+        },
+        dataLabels: {
+          enabled: false
+        },
+        title: {
+          text: '近十天内费用单统计',
+          align: 'left'
+        },
+        markers: {
+          hover: {
+            sizeOffset: 4
+          }
+        }
+      },
+      series10: [{
+        name: '费用',
+        data: []
+      }],
+      chartOptions10: {
+        chart: {
+          type: 'bar',
+          height: 300
+        },
+        title: {
+          text: '近十天费用金额统计',
+          align: 'left'
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: '55%'
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          show: true,
+          width: 2,
+          colors: ['transparent']
+        },
+        xaxis: {
+          categories: []
+        },
+        yaxis: {
+          title: {
+            text: ''
+          }
+        },
+        fill: {
+          opacity: 1
+        },
+        tooltip: {
+          y: {
+            formatter: function (val) {
+              return val + ' 元'
+            }
+          }
+        }
+      },
       series: [{
         name: '单量',
         data: []
@@ -143,7 +231,7 @@ export default {
           enabled: false
         },
         title: {
-          text: '近十天内完成工单统计',
+          text: '近十天内任务研究完成统计',
           align: 'left'
         },
         markers: {
@@ -162,7 +250,7 @@ export default {
           height: 300
         },
         title: {
-          text: '近十天工单统计',
+          text: '近十天研究任务统计',
           align: 'left'
         },
         plotOptions: {
@@ -310,6 +398,13 @@ export default {
 
         this.series[0].data = r.data.orderAmountDays.map(obj => { return obj.count })
         this.chartOptions.xaxis.categories = r.data.orderAmountDays.map(obj => { return obj.days })
+
+
+        this.series10[0].data = r.data.payAmountDays.map(obj => { return obj.count })
+        this.chartOptions10.xaxis.categories = r.data.payAmountDays.map(obj => { return obj.days })
+
+        this.series11[0].data = r.data.payNumDays.map(obj => { return obj.count })
+        this.chartOptions11.xaxis.categories = r.data.payNumDays.map(obj => { return obj.days })
 
         // if (r.data.putNumWithinDays !== null && r.data.putNumWithinDays.length !== 0) {
         //   if (this.chartOptions2.xaxis.categories.length === 0) {

@@ -93,9 +93,9 @@ public class AgentInfoServiceImpl extends ServiceImpl<AgentInfoMapper, AgentInfo
         List<LinkedHashMap<String, Object>> orderAmountDays = baseMapper.selectOrderAmountDays(enterpriseId);
 
         // 近十天内缴费单数量统计
-        List<LinkedHashMap<String, Object>> payNumDays = baseMapper.selectOrderNumDays(enterpriseId);
+        List<LinkedHashMap<String, Object>> payNumDays = baseMapper.selectPayNumDays(enterpriseId);
         // 近十天内缴费金额统计
-        List<LinkedHashMap<String, Object>> payAmountDays = baseMapper.selectOrderAmountDays(enterpriseId);
+        List<LinkedHashMap<String, Object>> payAmountDays = baseMapper.selectPayAmountDays(enterpriseId);
 
         // 公告
         List<BulletinInfo> bulletinInfoList = bulletinInfoService.list();
@@ -109,6 +109,10 @@ public class AgentInfoServiceImpl extends ServiceImpl<AgentInfoMapper, AgentInfo
         result.put("orderComplateNum", orderComplateNum);
         result.put("orderNumDays", orderNumDays);
         result.put("orderAmountDays", orderAmountDays);
+
+        result.put("payNumDays", payNumDays);
+        result.put("payAmountDays", payAmountDays);
+
         result.put("bulletin", bulletinInfoList);
         return result;
     }

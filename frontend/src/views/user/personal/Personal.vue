@@ -2,6 +2,7 @@
   <a-row :gutter="20">
     <a-col :span="6">
       <a-card :loading="loading" :bordered="false">
+        <a-alert :message="expertInfo.levelName" type="success" show-icon style="margin-bottom: 10px"/>
         <a-form :form="form" layout="vertical">
           <a-row :gutter="20">
             <a-col :span="12">
@@ -231,7 +232,7 @@ export default {
     },
     setFormValues ({...expert}) {
       this.rowId = expert.id
-      let fields = ['name', 'sex', 'birthday', 'nativeAddress', 'idCard', 'diploma', 'schoolName', 'address', 'mail', 'phone', 'deptId', 'positionId', 'integral']
+      let fields = ['name', 'sex', 'birthday', 'nativeAddress', 'idCard', 'diploma', 'schoolName', 'address', 'mail', 'phone', 'deptId', 'positionId', 'integral', 'memberLevel']
       let obj = {}
       Object.keys(expert).forEach((key) => {
         if (key === 'images') {

@@ -56,13 +56,13 @@
         </template>
       </a-table>
     </div>
-    <!-- 新增部门 -->
+    <!-- 新增小组 -->
     <dept-add
       @success="handleDeptAddSuccess"
       @close="handleDeptAddClose"
       :deptAddVisiable="deptAddVisiable">
     </dept-add>
-    <!-- 修改部门 -->
+    <!-- 修改小组 -->
     <dept-edit
       ref="deptEdit"
       @success="handleDeptEditSuccess"
@@ -138,7 +138,7 @@ export default {
     },
     handleDeptAddSuccess () {
       this.deptAddVisiable = false
-      this.$message.success('新增部门成功')
+      this.$message.success('新增小组成功')
       this.fetch()
     },
     add () {
@@ -149,7 +149,7 @@ export default {
     },
     handleDeptEditSuccess () {
       this.deptEditVisiable = false
-      this.$message.success('修改部门成功')
+      this.$message.success('修改小组成功')
       this.fetch()
     },
     edit (record) {

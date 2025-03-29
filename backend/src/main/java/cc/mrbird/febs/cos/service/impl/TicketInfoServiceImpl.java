@@ -58,6 +58,7 @@ public class TicketInfoServiceImpl extends ServiceImpl<TicketInfoMapper, TicketI
         LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>() {
             {
                 put("ticketInfo", null);
+                put("ticketOptionInfo", null);
             }
         };
         TicketInfo ticketInfo = this.getById(id);
@@ -68,6 +69,7 @@ public class TicketInfoServiceImpl extends ServiceImpl<TicketInfoMapper, TicketI
             List<TicketRecord> ticketRecord = ticketRecordService.list(Wrappers.<TicketRecord>lambdaQuery().eq(TicketRecord::getTicketId, id));
             Map<Integer, List<TicketRecord>> ticketMap = ticketRecord.stream().collect(Collectors.groupingBy(TicketRecord::getOptionId));
 
+            result.put("ticketOptionInfo", ticketOptionInfo);
             List<LinkedHashMap<String, Object>> ticketResult = new ArrayList<>();
             // 处理投票结果
             ticketOptionInfo.forEach(item -> {
@@ -79,7 +81,7 @@ public class TicketInfoServiceImpl extends ServiceImpl<TicketInfoMapper, TicketI
                 };
                 ticketResult.add(map);
             });
-            result.put("ticketOptionInfo", ticketResult);
+            result.put("ticketResult", ticketResult);
         }
         return result;
     }

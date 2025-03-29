@@ -143,7 +143,7 @@ export default {
           </a-popover>
         }
       }, {
-        title: '所属部门',
+        title: '所属小组',
         ellipsis: true,
         dataIndex: 'deptName'
       }, {

@@ -51,5 +51,8 @@ public class TicketRecord implements Serializable {
     @TableField(exist = false)
     private String staffName;
 
+    @TableField(exist = false)
+    private Integer staffId;
+
 
 }

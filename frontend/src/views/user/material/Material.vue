@@ -196,8 +196,8 @@ export default {
       })
     },
     selectDetailByUserId () {
-      this.$get(`/cos/user-info/detailByUserId/${this.currentUser.userId}`).then((r) => {
-        this.integral = r.data.data.integral
+      this.$get(`/cos/staff-info/userInfo/detail/${this.currentUser.userId}`).then((r) => {
+        this.integral = r.data.staff.integral
       })
     },
     onSelectChange (selectedRowKeys) {

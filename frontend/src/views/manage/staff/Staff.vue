@@ -23,7 +23,7 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="所属部门"
+                label="所属小组"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-select v-model="queryParams.deptId" allowClear>
@@ -33,7 +33,7 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="所属岗位"
+                label="所属职位"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-select v-model="queryParams.positionId" allowClear>
@@ -202,7 +202,7 @@ export default {
           }
         }
       }, {
-        title: '所属部门',
+        title: '所属小组',
         dataIndex: 'deptName',
         customRender: (text, row, index) => {
           if (text !== null) {
@@ -212,7 +212,7 @@ export default {
           }
         }
       }, {
-        title: '岗位',
+        title: '职位',
         dataIndex: 'positionName',
         customRender: (text, row, index) => {
           if (text !== null) {

@@ -142,7 +142,7 @@ export default {
         values.status = status
         if (!err) {
           this.loading = true
-          this.$put('/cos/exercise-audit-info', {
+          this.$post('/cos/exercise-audit-info/audit', {
             ...values
           }).then((r) => {
             this.reset()

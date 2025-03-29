@@ -7,7 +7,7 @@
           <div :class="advanced ? null: 'fold'">
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="部门编号"
+                label="小组编号"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.code"/>
@@ -15,7 +15,7 @@
             </a-col>
             <a-col :md="6" :sm="24">
               <a-form-item
-                label="部门名称"
+                label="小组名称"
                 :labelCol="{span: 5}"
                 :wrapperCol="{span: 18, offset: 1}">
                 <a-input v-model="queryParams.deptName"/>
@@ -118,10 +118,10 @@ export default {
     }),
     columns () {
       return [{
-        title: '部门编号',
+        title: '小组编号',
         dataIndex: 'code'
       }, {
-        title: '部门名称',
+        title: '小组名称',
         dataIndex: 'deptName'
       }, {
         title: '创建人',
@@ -172,7 +172,7 @@ export default {
     },
     handledeptAddSuccess () {
       this.deptAdd.visiable = false
-      this.$message.success('新增部门成功')
+      this.$message.success('新增小组成功')
       this.search()
     },
     edit (record) {
@@ -184,7 +184,7 @@ export default {
     },
     handledeptEditSuccess () {
       this.deptEdit.visiable = false
-      this.$message.success('修改部门成功')
+      this.$message.success('修改小组成功')
       this.search()
     },
     handleDeptChange (value) {

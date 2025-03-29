@@ -47,7 +47,7 @@
           <a-select-option v-for="r in roleData" :key="r.roleId">{{r.roleName}}</a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label='部门' v-bind="formItemLayout">
+      <a-form-item label='小组' v-bind="formItemLayout">
         <a-tree-select
           :allowClear="true"
           :dropdownStyle="{ maxHeight: '220px', overflow: 'auto' }"

@@ -25,7 +25,7 @@
             { pattern: '^0?(13[0-9]|15[012356789]|17[013678]|18[0-9]|14[57])[0-9]{8}$', message: '请输入正确的手机号'}
           ]}]"/>
       </a-form-item>
-      <a-form-item label='部门' v-bind="formItemLayout">
+      <a-form-item label='小组' v-bind="formItemLayout">
         <a-tree-select
           :allowClear="true"
           :dropdownStyle="{ maxHeight: '220px', overflow: 'auto' }"

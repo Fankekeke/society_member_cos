@@ -65,7 +65,7 @@
           </template>
         </template>
         <template slot="operation" slot-scope="text, record">
-          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>
+<!--          <a-icon type="setting" theme="twoTone" twoToneColor="#4a9ff5" @click="edit(record)" title="修 改"></a-icon>-->
           <a-icon type="bar-chart" @click="venueViewOpen(record)" title="统 计" style="margin-left: 15px"></a-icon>
         </template>
       </a-table>
@@ -84,6 +84,7 @@
     </bulletin-edit>
     <ticket-view
       @close="handlevenueViewClose"
+      @success="handlevenueViewSuccess"
       :venueShow="venueView.visiable"
       :venueData="venueView.data">
     </ticket-view>
@@ -198,6 +199,11 @@ export default {
     },
     handlevenueViewClose () {
       this.venueView.visiable = false
+    },
+    handlevenueViewSuccess () {
+      this.venueView.visiable = false
+      this.$message.success('投票成功')
+      this.search()
     },
     onSelectChange (selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys

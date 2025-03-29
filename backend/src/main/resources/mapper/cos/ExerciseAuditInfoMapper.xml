@@ -30,6 +30,9 @@
         <if test="exerciseAuditInfo.exerciseName != null and exerciseAuditInfo.exerciseName != ''">
             AND ei.name LIKE CONCAT('%',#{exerciseAuditInfo.exerciseName},'%')
         </if>
+        <if test="exerciseAuditInfo.staffId != null and exerciseAuditInfo.staffId != ''">
+            AND si.user_id = #{exerciseAuditInfo.staffId}
+        </if>
         order by eai.create_date desc
 
     </select>

@@ -35,14 +35,20 @@
         </a-col>
       </a-row>
       <br/>
-      <a-row style="margin-top: 15px" :gutter="25">
+      <a-row style="margin-top: 15px;padding-left: 24px;padding-right: 24px;" :gutter="25">
         <a-col :span="24">
           <div hoverable :bordered="false" style="width: 100%">
             <a-skeleton active v-if="chartLoading" />
             <apexchart v-if="!chartLoading" type="bar" height="300" :options="chartOptions1" :series="series1"></apexchart>
           </div>
         </a-col>
+        <a-col :span="24" style="margin-top: 15px" v-if="!checkFlag">
+          <a-button type="primary" v-for="(item, index) in ticketOption" :key="index" @click="voteAdd(item.id)" style="margin-right: 5px">
+            {{ item.name }}
+          </a-button>
+        </a-col>
       </a-row>
+      <br/>
     </div>
   </a-modal>
 </template>
@@ -50,6 +56,7 @@
 <script>
 import baiduMap from '@/utils/map/baiduMap'
 import moment from 'moment'
+import {mapState} from 'vuex'
 moment.locale('zh-cn')
 function getBase64 (file) {
   return new Promise((resolve, reject) => {
@@ -71,6 +78,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      currentUser: state => state.account.user
+    }),
     show: {
       get: function () {
         return this.venueShow
@@ -129,7 +139,9 @@ export default {
       },
       chartLoading: false,
       loading: false,
+      checkFlag: false,
       fileList: [],
+      ticketOption: [],
       previewVisible: false,
       previewImage: '',
       repairInfo: null,
@@ -143,16 +155,29 @@ export default {
     venueShow: function (value) {
       if (value) {
         this.queryDetail(this.venueData.id)
+        this.checkUserTicket(this.venueData.id)
       }
     }
   },
   methods: {
+    voteAdd (id) {
+      this.$get(`/cos/ticket-info/vote`, { ticketId: this.venueData.id, userId: this.currentUser.userId, optionId: id }).then((r) => {
+        this.$emit('success')
+      })
+    },
+    checkUserTicket (ticketId) {
+      this.$get(`/cos/ticket-info/checkUserTicket`, { ticketId: ticketId, userId: this.currentUser.userId }).then((r) => {
+        console.log(r.data.data)
+        this.checkFlag = r.data.data
+      })
+    },
     queryDetail (id) {
       this.chartLoading = true
       this.$get(`/cos/ticket-info/queryDetail/${id}`).then((r) => {
-        console.log(r.data.ticketOptionInfo)
-        this.series1[0].data = r.data.ticketOptionInfo.map(obj => { return obj.count })
-        this.chartOptions1.xaxis.categories = r.data.ticketOptionInfo.map(obj => { return obj.name })
+        this.ticketOption = r.data.ticketOptionInfo
+        console.log(this.ticketOption)
+        this.series1[0].data = r.data.ticketResult.map(obj => { return obj.count })
+        this.chartOptions1.xaxis.categories = r.data.ticketResult.map(obj => { return obj.name })
         setTimeout(() => {
           this.chartLoading = false
         }, 500)
